@@ -29,7 +29,7 @@ export const MyStakingAmountBox = () => {
       spacing={"20px"}
     >
       <MyStakingAmount />
-      <Divider bg={"white"} opacity={0.1} />
+      <Divider bg={"white"} opacity={0.1} mt={'16px!important'} />
       {isStaking && <EarnedMELD />}
       <FourBox />
       {isStaking ? <GetMeldRow /> : <StakeButtonGroup />}
@@ -40,25 +40,41 @@ export const MyStakingAmountBox = () => {
 const MyStakingAmount = () => {
   return (
     <Center width={"100%"} justifyContent={"space-between"}>
-      <Box height={46}>
+      <Center height={"46px"} flexDirection={"column"}>
         <Text color="white" fontSize={"13px"} fontWeight={"bold"}>
           My staking amount
         </Text>
-        <Text color="white" fontSize={"22px"} fontWeight={"bold"}>
-          {myStakingAmountNumber}
+        {isStaking && (
+          <Text color="white" fontSize={"22px"} fontWeight={"bold"}>
+            {myStakingAmountNumber}
+            <Text
+              as="span"
+              fontSize={"12px"}
+              fontWeight={"bold"}
+              textColor={"#4A7A7A"}
+            >
+              /MELD
+            </Text>
+          </Text>
+        )}
+      </Center>
+      {isStaking ? (
+        <MButton variant="outline" mScheme="yellow">
+          Add staking
+        </MButton>
+      ) : (
+        <Text color={"white"} fontWeight={"fold"} fontSize={"26px"}>
+          0
           <Text
-            as="span"
+            as={"span"}
+            color={"#4A7A7A"}
+            fontWeight={"fold"}
             fontSize={"12px"}
-            fontWeight={"bold"}
-            textColor={"#4A7A7A"}
           >
             /MELD
           </Text>
         </Text>
-      </Box>
-      <MButton variant="outline" mScheme="yellow">
-        Add staking
-      </MButton>
+      )}
     </Center>
   );
 };
@@ -167,7 +183,7 @@ const StakeButtonGroup = () => {
       justifyContent={"flex-end"}
       pt={"80px"}
     >
-      <MButton variant={"outline"} mScheme={"yellow"}>
+      <MButton variant={"outline"} mScheme={"white"}>
         Get MELD
       </MButton>
       <MButton

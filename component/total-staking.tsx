@@ -4,7 +4,7 @@ import { BoxInfo } from "./info-box";
 
 const totalStaking = 3150.15;
 
-const totalStakingValue = "15,251,513.28/USD";
+const totalStakingValue = "15,251,513.28";
 
 const totalSupply = "15,251,513.28";
 
@@ -28,12 +28,13 @@ export const TotalStakingBox = () => {
       backgroundImage={"url(/images/total_staking_BG@2x.png)"}
       backgroundRepeat={"no-repeat"}
       backgroundSize={"100%"}
+      backgroundPosition={"bottom"}
     >
       <Text color="#537E7E" fontSize={14} fontWeight={"bold"}>
-        Total staking
+        Total staked
       </Text>
 
-      <Text color="white" fontSize={24} fontWeight={"bold"}>
+      <Text color="#F5C52A" fontSize={34} fontWeight={"bold"}>
         {totalStaking}
         <Text as="span" mt={"10px"} fontSize={12} fontWeight={"bold"}>
           /MELD
@@ -41,13 +42,16 @@ export const TotalStakingBox = () => {
       </Text>
 
       <Text color="#537E7E" mt={"23px"} fontSize={12} fontWeight={"bold"}>
-        Total staking value
+        Total value
       </Text>
 
-      <Text color={"white"} mt={"6px"} fontSize={12} fontWeight={"bold"}>
+      <Text color={"white"} mt={"6px"} fontSize={24} fontWeight={"bold"}>
         {totalStakingValue}
+        <Text as="span" mt={"10px"} fontSize={12} fontWeight={"bold"}>
+          /USD
+        </Text>
       </Text>
-      <Flex mt={"62px"}>
+      {/* <Flex mt={"62px"}>
         <BoxInfo
           placement={"right"}
           title="Total Supply"
@@ -75,7 +79,7 @@ export const TotalStakingBox = () => {
           width={"192px"}
           height={"72px"}
         />
-      </Flex>
+      </Flex> */}
       <Flex
         alignItems={"center"}
         mt={"auto"}
