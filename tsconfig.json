@@ -16,6 +16,7 @@
     "incremental": true
   },
   "include": [
+    "generates.ts",
     "next-env.d.ts",
     "react-table-config.d.ts",
     "**/*.ts",

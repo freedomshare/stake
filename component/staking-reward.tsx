@@ -2,75 +2,58 @@ import Image from "next/image";
 import { Text, Box, Flex, Tooltip, Center, Button } from "@chakra-ui/react";
 import { UnitText } from "./info-box";
 import { colorSchemeList, MButton } from "./button";
+import { StakePoolsQuery, useStakePoolsQuery } from "../types-and-hooks";
 
-const StakingRewardList = [
+const StakingRewardList: {
+  img: string;
+  title: string;
+  info?: string;
+  field: keyof StakePoolsQuery["stakePools"][0];
+  unit?: string;
+}[] = [
   {
     img: "/images/apyhui_icon@2x.png",
     title: "Annual Percentage Yield",
-    free: "199%",
-    silver: "299%",
-    gold: "499%",
-    platinum: "799%",
+    field: "stakeApyPercent",
     unit: "",
   },
   {
     img: "/images/occupationhuit_icon@2x.png",
     title: "Occupation limit",
     info: "Occupation limit",
-    free: "20",
-    silver: "59",
-    gold: "99",
-    platinum: "199",
+    field: "landC",
     unit: "LANDS",
   },
   {
     img: "/images/day_landhui_icon@2x.png",
     title: "DItamin/day/land",
-    info: "DItamin/day/land",
-    free: "20",
-    silver: "59",
-    gold: "99",
-    platinum: "199",
+    field: "ditaminLD",
     unit: "DITAMIN",
   },
   {
     img: "/images/ditminchallengehui_icon@2x.png",
     title: "Ditamin/Challenge",
     info: "Ditamin/Challenge",
-    free: "20",
-    silver: "59",
-    gold: "99",
-    platinum: "199",
+    field: "ditaminC",
     unit: "DITAMIN",
   },
   {
     img: "/images/stakeamount_icon@2x.png",
     title: "Stake amount",
-    info: "Stake amount",
-    free: "20",
-    silver: "59",
-    gold: "99",
-    platinum: "199",
+    field: "salesCount",
     unit: "MELD",
   },
   {
     img: "/images/stakeduration_icon@2x.png",
     title: "Stake duration",
     info: "Stake duration",
-    free: "20",
-    silver: "59",
-    gold: "99",
-    platinum: "199",
+    field: "freezeTimeAtSeconds",
     unit: "DAYS",
   },
   {
     img: "/images/maxapy_icon@2x.png",
     title: "Max APY ",
-    info: "Max APY ",
-    free: "20%",
-    silver: "595",
-    gold: "99%",
-    platinum: "199%",
+    field: "gameApyPercent",
   },
 ];
 
@@ -159,9 +142,12 @@ const accessList: {
 interface IAccessListProps {
   title: React.ReactNode;
   field: TAccessClass;
+  data?: StakePoolsQuery["stakePools"];
+  index: number;
 }
 const AccessList = (p: IAccessListProps) => {
-  const { title, field } = p;
+  const { title, field, data = [], index } = p;
+
   return (
     <Flex
       flexDirection={"column"}
@@ -203,13 +189,20 @@ const AccessList = (p: IAccessListProps) => {
       }}
     >
       <Center height={"68px"}>
+        <Image
+          src={`/images/${field}@2x.png`}
+          width={30}
+          height={30}
+          alt={`${field} access`}
+        />
         <Text
           textAlign={"center"}
           color={"white"}
           fontSize={"13px"}
           fontWeight={"bold"}
+          ml={'2px'}
         >
-          {title}
+          {data?.[index]?.vipname || title}
         </Text>
       </Center>
       {StakingRewardList.map((item, index) => (
@@ -226,7 +219,7 @@ const AccessList = (p: IAccessListProps) => {
           key={item.title}
         >
           <UnitText
-            text={item[field]}
+            text={data?.[index]?.[item.field] || ""}
             unit={item.unit}
             textSize={"18px"}
             unitTextSize={"18px"}
@@ -247,6 +240,7 @@ const AccessList = (p: IAccessListProps) => {
 };
 
 export const StakingReward = () => {
+  const { data } = useStakePoolsQuery();
   return (
     <Box>
       <Text color={"white"} fontSize={"18px"} fontWeight={"bold"} mb={"14px"}>
@@ -261,8 +255,14 @@ export const StakingReward = () => {
       >
         <Flex height={"100%"}>
           <StakingRewardLabel />
-          {accessList.map((item) => (
-            <AccessList field={item.key} key={item.key} title={item.title} />
+          {accessList.map((item, i) => (
+            <AccessList
+              field={item.key}
+              key={item.key}
+              title={item.title}
+              data={data?.stakePools}
+              index={i}
+            />
           ))}
         </Flex>
       </Box>

@@ -8,7 +8,7 @@ import { MyStakingDetail } from "../component/my-staking-detail";
 import { StakingReward } from "../component/staking-reward";
 import { NotConnectWalletBox } from "../component/unconnect-wallet-box";
 
-const isConnectWallet = false;
+const isConnectWallet = true;
 
 const Home: NextPage = () => {
     return (

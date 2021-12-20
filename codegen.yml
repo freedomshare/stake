@@ -1,0 +1,11 @@
+schema: "https://graphql-graph-node-bsc.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake"
+documents: "./graphql/*.graphql"
+generates:
+  types-and-hooks.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-query
+    config:
+      fetcher:
+        endpoint: "https://graphql-graph-node-bsc.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake"

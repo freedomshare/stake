@@ -1,0 +1,367 @@
+directive @entity on OBJECT
+directive @derivedFrom(field: String) on FIELD_DEFINITION
+directive @subgraphId(id: String) on OBJECT
+type _Block_ {
+  hash: Bytes
+  number: Int!
+}
+
+type _Meta_ {
+  deployment: String!
+  hasIndexingErrors: Boolean!
+}
+
+type _StakeMeta_ {
+  id: ID!
+  staker: String!
+}
+
+input _StakeMeta__filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  staker: String
+  staker_not: String
+  staker_gt: String
+  staker_lt: String
+  staker_gte: String
+  staker_lte: String
+  staker_in: [String!]
+  staker_not_in: [String!]
+  staker_contains: String
+  staker_not_contains: String
+  staker_starts_with: String
+  staker_not_starts_with: String
+  staker_ends_with: String
+  staker_not_ends_with: String
+  stakeCount: BigInt
+  stakeCount_not: BigInt
+  stakeCount_gt: BigInt
+  stakeCount_lt: BigInt
+  stakeCount_gte: BigInt
+  stakeCount_lte: BigInt
+  stakeCount_in: [BigInt!]
+  stakeCount_not_in: [BigInt!]
+}
+
+enum _StakeMeta__orderBy {
+  id
+  staker
+  stakeCount
+}
+
+enum _SubgraphErrorPolicy_ {
+  allow
+  deny
+}
+
+scalar BigDecimal
+
+scalar BigInt
+
+input Block_height {
+  hash: Bytes
+  number: Int
+  number_gte: Int
+}
+
+scalar Bytes
+
+enum OrderDirection {
+  asc
+  desc
+}
+
+type Query {
+  stakePool(
+    id: ID!
+    block: Block_height
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): StakePool
+  stakePools(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: StakePool_orderBy
+    orderDirection: OrderDirection
+    where: StakePool_filter
+    block: Block_height
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [StakePool!]!
+  stake(
+    id: ID!
+    block: Block_height
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Stake
+  stakes(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Stake_orderBy
+    orderDirection: OrderDirection
+    where: Stake_filter
+    block: Block_height
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Stake!]!
+  stakeMeta(
+    id: ID!
+    block: Block_height
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): _StakeMeta_
+  stakeMetaS(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: _StakeMeta__orderBy
+    orderDirection: OrderDirection
+    where: _StakeMeta__filter
+    block: Block_height
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [_StakeMeta_!]!
+  _meta(block: Block_height): _Meta_
+}
+
+type Stake {
+  id: ID!
+}
+
+input Stake_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  staker: String
+  staker_not: String
+  staker_gt: String
+  staker_lt: String
+  staker_gte: String
+  staker_lte: String
+  staker_in: [String!]
+  staker_not_in: [String!]
+  staker_contains: String
+  staker_not_contains: String
+  staker_starts_with: String
+  staker_not_starts_with: String
+  staker_ends_with: String
+  staker_not_ends_with: String
+  claimed: Boolean
+  claimed_not: Boolean
+  claimed_in: [Boolean!]
+  claimed_not_in: [Boolean!]
+  stakePool: String
+  stakePool_not: String
+  stakePool_gt: String
+  stakePool_lt: String
+  stakePool_gte: String
+  stakePool_lte: String
+  stakePool_in: [String!]
+  stakePool_not_in: [String!]
+  stakePool_contains: String
+  stakePool_not_contains: String
+  stakePool_starts_with: String
+  stakePool_not_starts_with: String
+  stakePool_ends_with: String
+  stakePool_not_ends_with: String
+  stakedAt: BigInt
+  stakedAt_not: BigInt
+  stakedAt_gt: BigInt
+  stakedAt_lt: BigInt
+  stakedAt_gte: BigInt
+  stakedAt_lte: BigInt
+  stakedAt_in: [BigInt!]
+  stakedAt_not_in: [BigInt!]
+  lastRecivedAt: BigInt
+  lastRecivedAt_not: BigInt
+  lastRecivedAt_gt: BigInt
+  lastRecivedAt_lt: BigInt
+  lastRecivedAt_gte: BigInt
+  lastRecivedAt_lte: BigInt
+  lastRecivedAt_in: [BigInt!]
+  lastRecivedAt_not_in: [BigInt!]
+  expiredAt: BigInt
+  expiredAt_not: BigInt
+  expiredAt_gt: BigInt
+  expiredAt_lt: BigInt
+  expiredAt_gte: BigInt
+  expiredAt_lte: BigInt
+  expiredAt_in: [BigInt!]
+  expiredAt_not_in: [BigInt!]
+}
+
+enum Stake_orderBy {
+  id
+  staker
+  claimed
+  stakePool
+  stakedAt
+  lastRecivedAt
+  expiredAt
+}
+
+type StakePool {
+  id: ID!
+}
+
+input StakePool_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  ditaminLD: BigInt
+  ditaminLD_not: BigInt
+  ditaminLD_gt: BigInt
+  ditaminLD_lt: BigInt
+  ditaminLD_gte: BigInt
+  ditaminLD_lte: BigInt
+  ditaminLD_in: [BigInt!]
+  ditaminLD_not_in: [BigInt!]
+  ditaminC: BigInt
+  ditaminC_not: BigInt
+  ditaminC_gt: BigInt
+  ditaminC_lt: BigInt
+  ditaminC_gte: BigInt
+  ditaminC_lte: BigInt
+  ditaminC_in: [BigInt!]
+  ditaminC_not_in: [BigInt!]
+  numberOfMELD: BigInt
+  numberOfMELD_not: BigInt
+  numberOfMELD_gt: BigInt
+  numberOfMELD_lt: BigInt
+  numberOfMELD_gte: BigInt
+  numberOfMELD_lte: BigInt
+  numberOfMELD_in: [BigInt!]
+  numberOfMELD_not_in: [BigInt!]
+  landC: BigInt
+  landC_not: BigInt
+  landC_gt: BigInt
+  landC_lt: BigInt
+  landC_gte: BigInt
+  landC_lte: BigInt
+  landC_in: [BigInt!]
+  landC_not_in: [BigInt!]
+  vipname: String
+  vipname_not: String
+  vipname_gt: String
+  vipname_lt: String
+  vipname_gte: String
+  vipname_lte: String
+  vipname_in: [String!]
+  vipname_not_in: [String!]
+  vipname_contains: String
+  vipname_not_contains: String
+  vipname_starts_with: String
+  vipname_not_starts_with: String
+  vipname_ends_with: String
+  vipname_not_ends_with: String
+  stakeApyPercent: BigInt
+  stakeApyPercent_not: BigInt
+  stakeApyPercent_gt: BigInt
+  stakeApyPercent_lt: BigInt
+  stakeApyPercent_gte: BigInt
+  stakeApyPercent_lte: BigInt
+  stakeApyPercent_in: [BigInt!]
+  stakeApyPercent_not_in: [BigInt!]
+  gameApyPercent: BigInt
+  gameApyPercent_not: BigInt
+  gameApyPercent_gt: BigInt
+  gameApyPercent_lt: BigInt
+  gameApyPercent_gte: BigInt
+  gameApyPercent_lte: BigInt
+  gameApyPercent_in: [BigInt!]
+  gameApyPercent_not_in: [BigInt!]
+  freezeTimeAtSeconds: BigInt
+  freezeTimeAtSeconds_not: BigInt
+  freezeTimeAtSeconds_gt: BigInt
+  freezeTimeAtSeconds_lt: BigInt
+  freezeTimeAtSeconds_gte: BigInt
+  freezeTimeAtSeconds_lte: BigInt
+  freezeTimeAtSeconds_in: [BigInt!]
+  freezeTimeAtSeconds_not_in: [BigInt!]
+  totalVolume: BigInt
+  totalVolume_not: BigInt
+  totalVolume_gt: BigInt
+  totalVolume_lt: BigInt
+  totalVolume_gte: BigInt
+  totalVolume_lte: BigInt
+  totalVolume_in: [BigInt!]
+  totalVolume_not_in: [BigInt!]
+  salesCount: BigInt
+  salesCount_not: BigInt
+  salesCount_gt: BigInt
+  salesCount_lt: BigInt
+  salesCount_gte: BigInt
+  salesCount_lte: BigInt
+  salesCount_in: [BigInt!]
+  salesCount_not_in: [BigInt!]
+}
+
+enum StakePool_orderBy {
+  id
+  ditaminLD
+  ditaminC
+  numberOfMELD
+  landC
+  vipname
+  stakeApyPercent
+  gameApyPercent
+  freezeTimeAtSeconds
+  totalVolume
+  salesCount
+}
+
+type Subscription {
+  stakePool(
+    id: ID!
+    block: Block_height
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): StakePool
+  stakePools(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: StakePool_orderBy
+    orderDirection: OrderDirection
+    where: StakePool_filter
+    block: Block_height
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [StakePool!]!
+  stake(
+    id: ID!
+    block: Block_height
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): Stake
+  stakes(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: Stake_orderBy
+    orderDirection: OrderDirection
+    where: Stake_filter
+    block: Block_height
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [Stake!]!
+  stakeMeta(
+    id: ID!
+    block: Block_height
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): _StakeMeta_
+  stakeMetaS(
+    skip: Int = 0
+    first: Int = 100
+    orderBy: _StakeMeta__orderBy
+    orderDirection: OrderDirection
+    where: _StakeMeta__filter
+    block: Block_height
+    subgraphError: _SubgraphErrorPolicy_! = deny
+  ): [_StakeMeta_!]!
+  _meta(block: Block_height): _Meta_
+}
+

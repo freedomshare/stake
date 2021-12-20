@@ -1,0 +1,15 @@
+query stakePools($first: Int = 4) {
+  stakePools(first: $first) {
+    id
+    ditaminLD
+    ditaminC
+    numberOfMELD
+    landC
+    vipname
+    stakeApyPercent
+    gameApyPercent
+    freezeTimeAtSeconds
+    totalVolume
+    salesCount
+  }
+}

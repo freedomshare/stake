@@ -18,6 +18,8 @@ import {
 import { Column, useTable, usePagination } from "react-table";
 import { MButton } from "./button";
 import React, { useCallback } from "react";
+import { StakesQuery, useStakesQuery } from "../types-and-hooks";
+import { time } from "console";
 
 const pageLimit = 5;
 
@@ -56,8 +58,12 @@ const THeadTitle: React.FC<{}> = ({ children }) => (
         {children}
     </Text>
 );
-
-const tHeadList: Column<typeof data[0]>[] = [
+type TColumn = StakesQuery["stakes"][0] & {
+    $icon?: string;
+    $viewTx?: string;
+    $claim?: string;
+};
+const tHeadList: Column<TColumn>[] = [
     {
         width: 137,
         Header: "",
@@ -78,46 +84,69 @@ const tHeadList: Column<typeof data[0]>[] = [
                 </Box>
             </Box>
         ),
-        accessor: "id",
+        accessor: "$icon",
     },
 
     {
         width: 117 + 37,
         Header: <THeadTitle>Status</THeadTitle>,
-        accessor: "status",
-        Cell: ({ cell: { value } }) => <Status status="end"/>,
+        accessor: "id",
+        Cell: ({ cell }) => (
+            <Status
+                status={
+                    cell.row.original.claimed
+                        ? "claimed"
+                        : cell.row.original.expiredAt < Date.now()
+                        ? "end"
+                        : "staking"
+                }
+            />
+        ),
     },
     {
         width: 92 + 94,
 
         Header: <THeadTitle>Staking amount</THeadTitle>,
-        accessor: "stakingAmount",
+        accessor: "stakePool",
+        Cell: ({ cell }) => {
+            return (
+                <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
+                    {cell.row.original.stakePool.numberOfMELD}
+                    <Text as={"span"}>/MELD</Text>
+                </Text>
+            );
+        },
     },
     {
         width: 74 + 67,
 
         Header: <THeadTitle>Begin time</THeadTitle>,
-        accessor: "beginTime",
+        accessor: "stakedAt",
     },
     {
         width: 86 + 68,
 
         Header: <THeadTitle>End time</THeadTitle>,
-        accessor: "endTime",
+        accessor: "expiredAt",
     },
     {
         width: 74 + 56,
 
         Header: <THeadTitle>Total revenue</THeadTitle>,
-        accessor: "totalRevenue",
+        accessor: "lastRecivedAt",
     },
     {
         width: 98,
-        Header: <THeadTitle>Trading platform</THeadTitle>,
-        accessor: "tradingPlatform",
+        Header: <THeadTitle>view TX</THeadTitle>,
+        accessor: "$viewTx",
         Cell: () => {
             return (
-                <Box as="button" ml={"46px"}>
+                <Box
+                    as="button"
+                    ml={"18px"}
+                    opacity={0.8}
+                    _hover={{ opacity: 1 }}
+                >
                     <Image
                         src={"/images/zhuandao_icon@2x.png"}
                         width={21}
@@ -134,19 +163,22 @@ const tHeadList: Column<typeof data[0]>[] = [
                 <THeadTitle>Claim</THeadTitle>
             </Box>
         ),
-        Cell: () => {
+        Cell: ({ cell }) => {
             return (
                 <MButton
                     variant={"outline"}
                     mScheme="yellow"
-                    disabled
+                    disabled={
+                        cell.row.original.claimed ||
+                        cell.row.original.expiredAt() < Date.now()
+                    }
                     ml={"21px"}
                 >
                     CLAIM
                 </MButton>
             );
         },
-        accessor: "Claim",
+        accessor: "$claim",
     },
 ];
 
@@ -274,6 +306,8 @@ const data = [
 ];
 
 const MyStakingDetailTable = () => {
+    const { data } = useStakesQuery();
+
     const {
         getTableProps,
         getTableBodyProps,
@@ -296,8 +330,8 @@ const MyStakingDetailTable = () => {
         state: { pageIndex, pageSize },
     } = useTable(
         {
-            columns: tHeadList,
-            data: data,
+            columns: tHeadList as Column<StakesQuery["stakes"][0]>[],
+            data: data?.stakes || [],
             initialState: { pageIndex: 0, pageSize: 5 },
             defaultColumn: {
                 Cell: ({ value }: { value: React.ReactNode }) => (
@@ -475,8 +509,8 @@ const Status = (p: IStatusProps) => {
                 color={statusMapping[status].color}
                 fontSize={"13px"}
                 fontWeight={"bold"}
-                textTransform={'uppercase'}
-                ml={'2px'}
+                textTransform={"uppercase"}
+                ml={"2px"}
             >
                 {status}
             </Text>

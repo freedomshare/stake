@@ -1,0 +1,39 @@
+query stakes(
+  $skip: Int = 0
+  $first: Int = 100
+  $orderBy: Stake_orderBy
+  $orderDirection: OrderDirection
+  $where: Stake_filter
+  $block: Block_height
+  $subgraphError: _SubgraphErrorPolicy_! = deny
+) {
+  stakes(
+    skip: $skip
+    first: $first
+    orderBy: $orderBy
+    orderDirection: $orderDirection
+    where: $where
+    block: $block
+    subgraphError: $subgraphError
+  ) {
+    id
+    staker
+    claimed
+    stakedAt
+    lastRecivedAt
+    expiredAt
+    stakePool {
+      id
+      ditaminLD
+      ditaminC
+      numberOfMELD
+      landC
+      vipname
+      stakeApyPercent
+      gameApyPercent
+      freezeTimeAtSeconds
+      totalVolume
+      salesCount
+    }
+  }
+}

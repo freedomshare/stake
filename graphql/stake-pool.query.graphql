@@ -1,0 +1,9 @@
+query stakePool(
+    $id: ID!
+    $block: Block_height
+    $subgraphError: _SubgraphErrorPolicy_! = deny
+) {
+    stakePool(id: $id, block: $block, subgraphError: $subgraphError) {
+        id
+    }
+}
