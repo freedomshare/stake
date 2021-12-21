@@ -31,8 +31,13 @@ export async function getHighestLevelStakeInfo(
 ) {
     const melandStakes = MelandStakes__factory.connect(stakeAddress, provider.getSigner());
     const accounts = await provider.listAccounts();
-    const highStakeInfo = await melandStakes.getUserCurrentHighLevelStake(accounts[0]);
-    return melandStakes.stakePoolById(highStakeInfo.stakePoolId);
+    const info = await melandStakes.getUserCurrentHighLevelStake(accounts[0]);
+    return {
+        stakePercent: info[0],
+        ditaminDayLand: info[1],
+        ditaminChallenge: info[2],
+        occupationLimit: info[3]
+    }
 }
 
 // 获取所有待获取的利息

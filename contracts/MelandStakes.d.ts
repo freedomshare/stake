@@ -40,6 +40,7 @@ interface MelandStakesInterface extends ethers.utils.Interface {
     "upgradeTo(address)": FunctionFragment;
     "upgradeToAndCall(address,bytes)": FunctionFragment;
     "initialize()": FunctionFragment;
+    "setAcceptedToken(address)": FunctionFragment;
     "getUserCurrentHighLevelStake(address)": FunctionFragment;
     "stake(uint256)": FunctionFragment;
     "harvest()": FunctionFragment;
@@ -114,6 +115,10 @@ interface MelandStakesInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "setAcceptedToken",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getUserCurrentHighLevelStake",
     values: [string]
   ): string;
@@ -179,6 +184,10 @@ interface MelandStakesInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setAcceptedToken",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "getUserCurrentHighLevelStake",
     data: BytesLike
@@ -436,21 +445,15 @@ export class MelandStakes extends BaseContract {
       overrides?: Overrides & {from?: string | Promise<string>}
     ): Promise<ContractTransaction>;
 
+    setAcceptedToken(
+      _acceptedToken: string,
+      overrides?: Overrides & {from?: string | Promise<string>}
+    ): Promise<ContractTransaction>;
+
     getUserCurrentHighLevelStake(
       staker: string,
       overrides?: CallOverrides
-    ): Promise<
-      [
-        [BigNumber, string, BigNumber, BigNumber, BigNumber, boolean] & {
-          stakePoolId: BigNumber;
-          staker: string;
-          lastRecivedAt: BigNumber;
-          stakedAt: BigNumber;
-          expiredAt: BigNumber;
-          claimed: boolean;
-        }
-      ]
-    >;
+    ): Promise<[number, BigNumber, BigNumber, number]>;
 
     stake(
       stakePoolId: BigNumberish,
@@ -601,19 +604,15 @@ export class MelandStakes extends BaseContract {
     overrides?: Overrides & {from?: string | Promise<string>}
   ): Promise<ContractTransaction>;
 
+  setAcceptedToken(
+    _acceptedToken: string,
+    overrides?: Overrides & {from?: string | Promise<string>}
+  ): Promise<ContractTransaction>;
+
   getUserCurrentHighLevelStake(
     staker: string,
     overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, string, BigNumber, BigNumber, BigNumber, boolean] & {
-      stakePoolId: BigNumber;
-      staker: string;
-      lastRecivedAt: BigNumber;
-      stakedAt: BigNumber;
-      expiredAt: BigNumber;
-      claimed: boolean;
-    }
-  >;
+  ): Promise<[number, BigNumber, BigNumber, number]>;
 
   stake(
     stakePoolId: BigNumberish,
@@ -762,19 +761,15 @@ export class MelandStakes extends BaseContract {
 
     initialize(overrides?: CallOverrides): Promise<void>;
 
+    setAcceptedToken(
+      _acceptedToken: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     getUserCurrentHighLevelStake(
       staker: string,
       overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, string, BigNumber, BigNumber, BigNumber, boolean] & {
-        stakePoolId: BigNumber;
-        staker: string;
-        lastRecivedAt: BigNumber;
-        stakedAt: BigNumber;
-        expiredAt: BigNumber;
-        claimed: boolean;
-      }
-    >;
+    ): Promise<[number, BigNumber, BigNumber, number]>;
 
     stake(stakePoolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
@@ -1025,6 +1020,11 @@ export class MelandStakes extends BaseContract {
       overrides?: Overrides & {from?: string | Promise<string>}
     ): Promise<BigNumber>;
 
+    setAcceptedToken(
+      _acceptedToken: string,
+      overrides?: Overrides & {from?: string | Promise<string>}
+    ): Promise<BigNumber>;
+
     getUserCurrentHighLevelStake(
       staker: string,
       overrides?: CallOverrides
@@ -1151,6 +1151,11 @@ export class MelandStakes extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initialize(
+      overrides?: Overrides & {from?: string | Promise<string>}
+    ): Promise<PopulatedTransaction>;
+
+    setAcceptedToken(
+      _acceptedToken: string,
       overrides?: Overrides & {from?: string | Promise<string>}
     ): Promise<PopulatedTransaction>;
 
