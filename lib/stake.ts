@@ -53,3 +53,12 @@ export async function harvest(
     const tx = await melandStakes.harvest();
     return tx.wait();
 }
+
+export async function getMELD(
+    meldAddress: string,
+    provider: Web3Provider
+) {
+    const meld = MELD__factory.connect(meldAddress, provider.getSigner());
+    const accounts = await provider.listAccounts();
+    return meld.balanceOf(accounts[0]);
+}
