@@ -3,7 +3,9 @@ import Image from "next/image";
 import { Box, Center, HStack, Text, VStack } from "@chakra-ui/react";
 import { MButton } from "./button";
 
-export const NotConnectWalletBox = () => {
+export const NotConnectWalletBox = (props: {
+  onClickConnect: () => Promise<void>
+}) => {
   return (
     <Box
       width={662}
@@ -38,7 +40,7 @@ export const NotConnectWalletBox = () => {
           </Text>
         </Center>
 
-        <MButton variant={"outline"} mScheme={"yellow"} fontSize={"14px"}>
+        <MButton variant={"outline"} onClick={props.onClickConnect} mScheme={"yellow"} fontSize={"14px"}>
           Connect wallet
         </MButton>
       </VStack>
