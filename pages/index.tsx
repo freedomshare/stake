@@ -5,7 +5,7 @@ import React from "react";
 import { MyStakingAmountBox } from "../component/my-staking-amount";
 import { TotalStakingBox } from "../component/total-staking";
 import { MyStakingDetail } from "../component/my-staking-detail";
-import { StakingReward } from "../component/staking-reward";
+import { StakingPool } from "../component/staking-pool";
 import { NotConnectWalletBox } from "../component/unconnect-wallet-box";
 
 const isConnectWallet = true;
@@ -22,7 +22,7 @@ const Home: NextPage = () => {
                 <TotalStakingBox />
             </HStack>
             <MyStakingDetail />
-            <StakingReward />
+            <StakingPool />
         </VStack>
     );
 };

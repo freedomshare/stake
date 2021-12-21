@@ -4,7 +4,7 @@ import { UnitText } from "./info-box";
 import { colorSchemeList, MButton } from "./button";
 import { StakePoolsQuery, useStakePoolsQuery } from "../types-and-hooks";
 
-const StakingRewardList: {
+const StakingPoolList: {
   img: string;
   title: string;
   info?: string;
@@ -57,10 +57,10 @@ const StakingRewardList: {
   },
 ];
 
-const StakingRewardLabel = () => {
+const StakingPoolLabel = () => {
   return (
     <Box pt={"68px"} pb={"84px"}>
-      {StakingRewardList.map((item, index) => (
+      {StakingPoolList.map((item, index) => (
         <Flex
           alignItems={"center"}
           border="2px solid rgba(255, 255, 255, 0.1)"
@@ -205,7 +205,7 @@ const AccessList = (p: IAccessListProps) => {
           {data?.[index]?.vipname || title}
         </Text>
       </Center>
-      {StakingRewardList.map((item, index) => (
+      {StakingPoolList.map((item, index) => (
         <Center
           alignItems={"center"}
           border="2px solid rgba(255, 255, 255, 0.1)"
@@ -239,12 +239,12 @@ const AccessList = (p: IAccessListProps) => {
   );
 };
 
-export const StakingReward = () => {
+export const StakingPool = () => {
   const { data } = useStakePoolsQuery();
   return (
     <Box>
       <Text color={"white"} fontSize={"18px"} fontWeight={"bold"} mb={"14px"}>
-        Staking reward
+      Staking pool
       </Text>
       <Box
         width={1200}
@@ -254,7 +254,7 @@ export const StakingReward = () => {
         px={"22px"}
       >
         <Flex height={"100%"}>
-          <StakingRewardLabel />
+          <StakingPoolLabel />
           {accessList.map((item, i) => (
             <AccessList
               field={item.key}
