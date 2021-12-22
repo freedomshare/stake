@@ -7,7 +7,7 @@ import { BigNumber } from "bignumber.js";
 import { MNumberFormat } from "./number-format";
 import { staker } from "../store/constant";
 import { useTotalStakeMetaData } from "../store/stake";
-const ViewContractUrl = "/";
+const ViewContractUrl = "https://mumbai.polygonscan.com/address/0x562971D6b3496fA51CE8782BEd6d932BBc8AbaaF";
 
 export const TotalStakingBox = () => {
     const { isLoading: prizeLoading, data } = useGetMeldPrice();
