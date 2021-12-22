@@ -7,7 +7,7 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Mayb
 
 function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
   return async (): Promise<TData> => {
-    const res = await fetch("https://graphql-graph-node-bsc.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake", {
+    const res = await fetch("https://graphql-graph-node-mumbai.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake", {
     method: "POST",
       body: JSON.stringify({ query, variables }),
     });
@@ -150,6 +150,7 @@ export type Stake = {
    *
    */
   staker: Scalars['String'];
+  txHash: Scalars['Bytes'];
 };
 
 export type StakePool = {
@@ -383,6 +384,12 @@ export type Stake_Filter = {
   staker_not_in?: InputMaybe<Array<Scalars['String']>>;
   staker_not_starts_with?: InputMaybe<Scalars['String']>;
   staker_starts_with?: InputMaybe<Scalars['String']>;
+  txHash?: InputMaybe<Scalars['Bytes']>;
+  txHash_contains?: InputMaybe<Scalars['Bytes']>;
+  txHash_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  txHash_not?: InputMaybe<Scalars['Bytes']>;
+  txHash_not_contains?: InputMaybe<Scalars['Bytes']>;
+  txHash_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
 };
 
 export enum Stake_OrderBy {
@@ -392,7 +399,8 @@ export enum Stake_OrderBy {
   LastRecivedAt = 'lastRecivedAt',
   StakePool = 'stakePool',
   StakedAt = 'stakedAt',
-  Staker = 'staker'
+  Staker = 'staker',
+  TxHash = 'txHash'
 }
 
 export type Subscription = {
@@ -495,6 +503,11 @@ export type _StakeMeta_ = {
   __typename?: '_StakeMeta_';
   id: Scalars['ID'];
   /**
+   * total stake amount
+   *
+   */
+  stakeAmount: Scalars['BigInt'];
+  /**
    * stake 数量
    *
    */
@@ -511,6 +524,14 @@ export type _StakeMeta__Filter = {
   id_lte?: InputMaybe<Scalars['ID']>;
   id_not?: InputMaybe<Scalars['ID']>;
   id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  stakeAmount?: InputMaybe<Scalars['BigInt']>;
+  stakeAmount_gt?: InputMaybe<Scalars['BigInt']>;
+  stakeAmount_gte?: InputMaybe<Scalars['BigInt']>;
+  stakeAmount_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  stakeAmount_lt?: InputMaybe<Scalars['BigInt']>;
+  stakeAmount_lte?: InputMaybe<Scalars['BigInt']>;
+  stakeAmount_not?: InputMaybe<Scalars['BigInt']>;
+  stakeAmount_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   stakeCount?: InputMaybe<Scalars['BigInt']>;
   stakeCount_gt?: InputMaybe<Scalars['BigInt']>;
   stakeCount_gte?: InputMaybe<Scalars['BigInt']>;
@@ -537,6 +558,7 @@ export type _StakeMeta__Filter = {
 
 export enum _StakeMeta__OrderBy {
   Id = 'id',
+  StakeAmount = 'stakeAmount',
   StakeCount = 'stakeCount',
   Staker = 'staker'
 }
@@ -558,11 +580,39 @@ export type StakePoolQueryVariables = Exact<{
 export type StakePoolQuery = { __typename?: 'Query', stakePool?: { __typename?: 'StakePool', id: string } | null | undefined };
 
 export type StakePoolsQueryVariables = Exact<{
+  skip?: InputMaybe<Scalars['Int']>;
   first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<StakePool_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<StakePool_Filter>;
+  block?: InputMaybe<Block_Height>;
+  subgraphError?: _SubgraphErrorPolicy_;
 }>;
 
 
 export type StakePoolsQuery = { __typename?: 'Query', stakePools: Array<{ __typename?: 'StakePool', id: string, ditaminLD: any, ditaminC: any, numberOfMELD: any, landC: any, vipname: string, stakeApyPercent: any, gameApyPercent: any, freezeTimeAtSeconds: any, totalVolume: any, salesCount: any }> };
+
+export type StakeMetaQueryVariables = Exact<{
+  id: Scalars['ID'];
+  block?: InputMaybe<Block_Height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+}>;
+
+
+export type StakeMetaQuery = { __typename?: 'Query', stakeMeta?: { __typename?: '_StakeMeta_', id: string, staker: string, stakeAmount: any, stakeCount: any } | null | undefined };
+
+export type StakeMetaSQueryVariables = Exact<{
+  skip?: InputMaybe<Scalars['Int']>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<_StakeMeta__OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  where?: InputMaybe<_StakeMeta__Filter>;
+  block?: InputMaybe<Block_Height>;
+  subgraphError?: _SubgraphErrorPolicy_;
+}>;
+
+
+export type StakeMetaSQuery = { __typename?: 'Query', stakeMetaS: Array<{ __typename?: '_StakeMeta_', id: string, staker: string, stakeAmount: any, stakeCount: any }> };
 
 export type StakesQueryVariables = Exact<{
   skip?: InputMaybe<Scalars['Int']>;
@@ -598,8 +648,16 @@ export const useStakePoolQuery = <
       options
     );
 export const StakePoolsDocument = `
-    query stakePools($first: Int = 4) {
-  stakePools(first: $first) {
+    query stakePools($skip: Int = 0, $first: Int = 100, $orderBy: StakePool_orderBy, $orderDirection: OrderDirection, $where: StakePool_filter, $block: Block_height, $subgraphError: _SubgraphErrorPolicy_! = deny) {
+  stakePools(
+    skip: $skip
+    first: $first
+    orderBy: $orderBy
+    orderDirection: $orderDirection
+    where: $where
+    block: $block
+    subgraphError: $subgraphError
+  ) {
     id
     ditaminLD
     ditaminC
@@ -624,6 +682,58 @@ export const useStakePoolsQuery = <
     useQuery<StakePoolsQuery, TError, TData>(
       variables === undefined ? ['stakePools'] : ['stakePools', variables],
       fetcher<StakePoolsQuery, StakePoolsQueryVariables>(StakePoolsDocument, variables),
+      options
+    );
+export const StakeMetaDocument = `
+    query stakeMeta($id: ID!, $block: Block_height, $subgraphError: _SubgraphErrorPolicy_! = deny) {
+  stakeMeta(id: $id, block: $block, subgraphError: $subgraphError) {
+    id
+    staker
+    stakeAmount
+    stakeCount
+  }
+}
+    `;
+export const useStakeMetaQuery = <
+      TData = StakeMetaQuery,
+      TError = unknown
+    >(
+      variables: StakeMetaQueryVariables,
+      options?: UseQueryOptions<StakeMetaQuery, TError, TData>
+    ) =>
+    useQuery<StakeMetaQuery, TError, TData>(
+      ['stakeMeta', variables],
+      fetcher<StakeMetaQuery, StakeMetaQueryVariables>(StakeMetaDocument, variables),
+      options
+    );
+export const StakeMetaSDocument = `
+    query stakeMetaS($skip: Int = 0, $first: Int = 100, $orderBy: _StakeMeta__orderBy, $orderDirection: OrderDirection, $where: _StakeMeta__filter, $block: Block_height, $subgraphError: _SubgraphErrorPolicy_! = deny) {
+  stakeMetaS(
+    skip: $skip
+    first: $first
+    orderBy: $orderBy
+    orderDirection: $orderDirection
+    where: $where
+    block: $block
+    subgraphError: $subgraphError
+  ) {
+    id
+    staker
+    stakeAmount
+    stakeCount
+  }
+}
+    `;
+export const useStakeMetaSQuery = <
+      TData = StakeMetaSQuery,
+      TError = unknown
+    >(
+      variables?: StakeMetaSQueryVariables,
+      options?: UseQueryOptions<StakeMetaSQuery, TError, TData>
+    ) =>
+    useQuery<StakeMetaSQuery, TError, TData>(
+      variables === undefined ? ['stakeMetaS'] : ['stakeMetaS', variables],
+      fetcher<StakeMetaSQuery, StakeMetaSQueryVariables>(StakeMetaSDocument, variables),
       options
     );
 export const StakesDocument = `

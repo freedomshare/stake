@@ -1,13 +1,13 @@
-query stakePools(
+query stakeMetaS(
     $skip: Int = 0
     $first: Int = 100
-    $orderBy: StakePool_orderBy
+    $orderBy: _StakeMeta__orderBy
     $orderDirection: OrderDirection
-    $where: StakePool_filter
+    $where: _StakeMeta__filter
     $block: Block_height
     $subgraphError: _SubgraphErrorPolicy_! = deny
 ) {
-    stakePools(
+    stakeMetaS(
         skip: $skip
         first: $first
         orderBy: $orderBy
@@ -17,15 +17,8 @@ query stakePools(
         subgraphError: $subgraphError
     ) {
         id
-        ditaminLD
-        ditaminC
-        numberOfMELD
-        landC
-        vipname
-        stakeApyPercent
-        gameApyPercent
-        freezeTimeAtSeconds
-        totalVolume
-        salesCount
+        staker
+        stakeAmount
+        stakeCount
     }
 }

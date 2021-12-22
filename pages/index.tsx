@@ -1,43 +1,37 @@
 import type { NextPage } from "next";
 import { HStack, VStack } from "@chakra-ui/react";
 
-import React from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { MyStakingAmountBox } from "../component/my-staking-amount";
 import { TotalStakingBox } from "../component/total-staking";
 import { MyStakingDetail } from "../component/my-staking-detail";
 import { StakingPool } from "../component/staking-pool";
 import { NotConnectWalletBox } from "../component/unconnect-wallet-box";
-import { getWeb3Provider, switchToNetwork } from '../lib/web3';
+import { useStore } from "@nanostores/react";
+import { connectWallet, userAddressAtom } from "../store/address";
 
 const Home: NextPage<{
-    networkName: string,
-    addressOfMELD: string,
-    addressOfStake: string
-}>= (props) => {
-    const [uAddress, setUAddress] = React.useState<string|null>(null);
+    networkName: string;
+    addressOfMELD: string;
+    addressOfStake: string;
+}> = (props) => {
+    const addr = useStore(userAddressAtom);
 
-    const connectWallet = React.useCallback(async () => {
-        const provider = await getWeb3Provider();
-        if (!provider) {
-            window.alert("please install metamask");
-            return;
-        }
-        await switchToNetwork(provider, props.networkName);
-        const accounts = await provider.listAccounts();
-        setUAddress(accounts[0]);
-    }, [uAddress]);
+    // useLayoutEffect(() => {
+    //     connectWallet();
+    // }, []);
 
     return (
         <VStack spacing={"30px"} bg={"#125354"} pt={"43px"} pb={"54px"}>
             <HStack spacing={"33px"} alignItems={"flex-start"}>
-                {uAddress ? (
+                {addr ? (
                     <MyStakingAmountBox />
                 ) : (
                     <NotConnectWalletBox onClickConnect={connectWallet} />
                 )}
                 <TotalStakingBox />
             </HStack>
-            <MyStakingDetail />
+            {addr && <MyStakingDetail />}
             <StakingPool />
         </VStack>
     );
@@ -45,12 +39,11 @@ const Home: NextPage<{
 
 export async function getStaticProps() {
     const { ...clientWhiteList } = process.env;
-
     return {
         props: {
-            ...clientWhiteList
-        }
-    }
+            ...clientWhiteList,
+        },
+    };
 }
 
 export default Home;

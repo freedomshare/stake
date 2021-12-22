@@ -17,9 +17,24 @@ import {
 } from "@chakra-ui/react";
 import { Column, useTable, usePagination } from "react-table";
 import { MButton } from "./button";
-import React, { useCallback } from "react";
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import { StakesQuery, useStakesQuery } from "../types-and-hooks";
 import { time } from "console";
+import { useStore } from "@nanostores/react";
+import { userAddressAtom } from "../store/address";
+import { fromWei } from "web3-utils";
+import format from "date-fns/format";
+import { BigNumber } from "ethers";
+import { useStakes, useTotalStakeMetaData } from "../store/stake";
+import NumberFormat from "react-number-format";
+import { MNumberFormat } from "./number-format";
+import { networkName, PAGE_SIZE, txUrlMap } from "../store/constant";
 
 const pageLimit = 5;
 
@@ -34,8 +49,15 @@ const getPaginationGroup = ({
         .filter((e) => e <= pageCount);
 };
 
+const myStakingDetailClassName = "my-staking-detail";
+export const scrollToMyStakingDetail = () => {
+    document.querySelector(`.${myStakingDetailClassName}`)?.scrollIntoView({
+        behavior: "smooth",
+    });
+};
+
 export const MyStakingDetail = () => (
-    <Box>
+    <Box className={myStakingDetailClassName}>
         <Text color={"white"} fontWeight={"bold"} fontSize={"18px"} mb={"14px"}>
             My staking detail
         </Text>
@@ -53,6 +75,43 @@ export const MyStakingDetail = () => (
     </Box>
 );
 
+/**
+ *  (max(now, end-time) - begin time) * (numberOfMELD * stakeApyPercent / 100 / 31536000 )
+ * @param startTime
+ * @param endTime
+ * @param numberOfMELD
+ * @param stakeApyPercent
+ * @param freezeTimeAtSeconds
+ * @returns
+ */
+const totalRevenue = (
+    startTime: string,
+    endTime: string,
+    numberOfMELD: string,
+    stakeApyPercent: number
+    // freezeTimeAtSeconds: string
+) => {
+    let start = BigNumber.from(startTime);
+    let min = BigNumber.from((Date.now() / 1000).toFixed(0));
+    let max = BigNumber.from(endTime);
+    // let freezeTime = BigNumber.from(freezeTimeAtSeconds);
+    let numberOfMELDBig = BigNumber.from(numberOfMELD);
+    let stakeApyPercentBig = BigNumber.from(stakeApyPercent);
+    if (min.gt(max)) {
+        max = min;
+    }
+    return fromWei(
+        max
+            .sub(start)
+            .mul(numberOfMELDBig)
+            .mul(stakeApyPercentBig)
+            // .div(freezeTime)
+            .div(100)
+            .div(31536000)
+            .toString()
+    );
+};
+
 const THeadTitle: React.FC<{}> = ({ children }) => (
     <Text color={"rgba(255,255,255,.3)"} fontSize={12}>
         {children}
@@ -69,9 +128,9 @@ const tHeadList: Column<TColumn>[] = [
         Header: "",
         Cell: () => (
             <Box sx={{ pl: "37px" }}>
-                <Box
-                    width={"73px"}
-                    height={"73px"}
+                <Center
+                    width={"66px"}
+                    height={"66px"}
                     bg={"#6a704a"}
                     rounded={"9999px"}
                 >
@@ -81,7 +140,7 @@ const tHeadList: Column<TColumn>[] = [
                         height={38}
                         alt="logo"
                     />
-                </Box>
+                </Center>
             </Box>
         ),
         accessor: "$icon",
@@ -96,22 +155,21 @@ const tHeadList: Column<TColumn>[] = [
                 status={
                     cell.row.original.claimed
                         ? "claimed"
-                        : cell.row.original.expiredAt < Date.now()
-                        ? "end"
-                        : "staking"
+                        : cell.row.original.expiredAt > Date.now() / 1000
+                        ? "staking"
+                        : "end"
                 }
             />
         ),
     },
     {
         width: 92 + 94,
-
         Header: <THeadTitle>Staking amount</THeadTitle>,
         accessor: "stakePool",
         Cell: ({ cell }) => {
             return (
                 <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
-                    {cell.row.original.stakePool.numberOfMELD}
+                    {fromWei(cell.row.original?.stakePool?.numberOfMELD || 0)}
                     <Text as={"span"}>/MELD</Text>
                 </Text>
             );
@@ -122,30 +180,87 @@ const tHeadList: Column<TColumn>[] = [
 
         Header: <THeadTitle>Begin time</THeadTitle>,
         accessor: "stakedAt",
+        Cell: ({ cell }) => {
+            return (
+                <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
+                    {format(
+                        new Date(cell.row.original?.stakedAt * 1000),
+                        "dd/MM/yyyy"
+                    )}
+                </Text>
+            );
+        },
     },
     {
         width: 86 + 68,
 
         Header: <THeadTitle>End time</THeadTitle>,
         accessor: "expiredAt",
+        Cell: ({ cell }) => {
+            return (
+                <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
+                    {format(
+                        new Date(cell.row.original?.expiredAt * 1000),
+                        "dd/MM/yyyy"
+                    )}
+                </Text>
+            );
+        },
     },
     {
         width: 74 + 56,
 
         Header: <THeadTitle>Total revenue</THeadTitle>,
         accessor: "lastRecivedAt",
+        Cell: ({ cell }) => {
+            const {
+                expiredAt,
+                stakedAt,
+                stakePool: {
+                    stakeApyPercent,
+
+                    freezeTimeAtSeconds,
+                    numberOfMELD,
+                },
+            } = cell.row.original;
+            return (
+                <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
+                    {/* {totalRevenue(
+                        stakedAt,
+                        expiredAt,
+                        numberOfMELD,
+                        stakeApyPercent,
+                        freezeTimeAtSeconds
+                    )} */}
+                    <MNumberFormat
+                        value={totalRevenue(
+                            stakedAt,
+                            expiredAt,
+                            numberOfMELD,
+                            stakeApyPercent
+                            // freezeTimeAtSeconds
+                        )}
+                    />
+                    <Text as={"span"}>/MELD</Text>
+                </Text>
+            );
+        },
     },
     {
         width: 98,
         Header: <THeadTitle>view TX</THeadTitle>,
         accessor: "$viewTx",
-        Cell: () => {
+        Cell: ({ cell }) => {
             return (
                 <Box
-                    as="button"
+                    as="a"
                     ml={"18px"}
                     opacity={0.8}
                     _hover={{ opacity: 1 }}
+                    href={`${txUrlMap[networkName!]}/${
+                        //@ts-ignore
+                        cell.row.original.txHash
+                    }`}
                 >
                     <Image
                         src={"/images/zhuandao_icon@2x.png"}
@@ -170,9 +285,10 @@ const tHeadList: Column<TColumn>[] = [
                     mScheme="yellow"
                     disabled={
                         cell.row.original.claimed ||
-                        cell.row.original.expiredAt() < Date.now()
+                        cell.row.original.expiredAt < Date.now()
                     }
                     ml={"21px"}
+                    // onClick={() => {
                 >
                     CLAIM
                 </MButton>
@@ -182,131 +298,16 @@ const tHeadList: Column<TColumn>[] = [
     },
 ];
 
-const data = [
-    {
-        id: 1,
-        status: "STAKING0",
-        stakingAmount: "1,000,000",
-        beginTime: "2020-01-01",
-        endTime: "2020-01-01",
-        totalRevenue: "1,000,000",
-        tradingPlatform: "Binance",
-        Claim: "Claim",
-    },
-    {
-        id: 1,
-
-        status: "STAKING1",
-        stakingAmount: "1,000,000",
-        beginTime: "2020-01-01",
-        endTime: "2020-01-01",
-        totalRevenue: "1,000,000",
-        tradingPlatform: "Binance",
-        Claim: "Claim",
-    },
-    {
-        id: 1,
-
-        status: "STAKING2",
-        stakingAmount: "1,000,000",
-        beginTime: "2020-01-01",
-        endTime: "2020-01-01",
-        totalRevenue: "1,000,000",
-        tradingPlatform: "Binance",
-        Claim: "Claim",
-    },
-    {
-        id: 1,
-
-        status: "STAKING3",
-        stakingAmount: "1,000,000",
-        beginTime: "2020-01-01",
-        endTime: "2020-01-01",
-        totalRevenue: "1,000,000",
-        tradingPlatform: "Binance",
-        Claim: "Claim",
-    },
-    {
-        id: 1,
-
-        status: "STAKING4",
-        stakingAmount: "1,000,000",
-        beginTime: "2020-01-01",
-        endTime: "2020-01-01",
-        totalRevenue: "1,000,000",
-        tradingPlatform: "Binance",
-        Claim: "Claim",
-    },
-    {
-        id: 1,
-
-        status: "STAKING5",
-        stakingAmount: "1,000,000",
-        beginTime: "2020-01-01",
-        endTime: "2020-01-01",
-        totalRevenue: "1,000,000",
-        tradingPlatform: "Binance",
-        Claim: "Claim",
-    },
-    {
-        id: 1,
-
-        status: "STAKING6",
-        stakingAmount: "1,000,000",
-        beginTime: "2020-01-01",
-        endTime: "2020-01-01",
-        totalRevenue: "1,000,000",
-        tradingPlatform: "Binance",
-        Claim: "Claim",
-    },
-    {
-        id: 1,
-
-        status: "STAKING7",
-        stakingAmount: "1,000,000",
-        beginTime: "2020-01-01",
-        endTime: "2020-01-01",
-        totalRevenue: "1,000,000",
-        tradingPlatform: "Binance",
-        Claim: "Claim",
-    },
-    {
-        id: 1,
-
-        status: "STAKING8",
-        stakingAmount: "1,000,000",
-        beginTime: "2020-01-01",
-        endTime: "2020-01-01",
-        totalRevenue: "1,000,000",
-        tradingPlatform: "Binance",
-        Claim: "Claim",
-    },
-    {
-        id: 1,
-
-        status: "STAKING9",
-        stakingAmount: "1,000,000",
-        beginTime: "2020-01-01",
-        endTime: "2020-01-01",
-        totalRevenue: "1,000,000",
-        tradingPlatform: "Binance",
-        Claim: "Claim",
-    },
-    {
-        id: 1,
-
-        status: "STAKING10",
-        stakingAmount: "1,000,000",
-        beginTime: "2020-01-01",
-        endTime: "2020-01-01",
-        totalRevenue: "1,000,000",
-        tradingPlatform: "Binance",
-        Claim: "Claim",
-    },
-];
-
 const MyStakingDetailTable = () => {
-    const { data } = useStakesQuery();
+    const userAddr = useStore(userAddressAtom);
+    const { data: metaData } = useTotalStakeMetaData(userAddr);
+    const counts = useMemo(
+        () => metaData?.stakeMetaS?.[0]?.stakeCount || 0,
+        [metaData?.stakeMetaS]
+    );
+    // const pageIndexRef = useRef(0);
+    const [pIndex, setPIndex] = useState(0);
+    const { data } = useStakes(pIndex);
 
     const {
         getTableProps,
@@ -316,23 +317,19 @@ const MyStakingDetailTable = () => {
         prepareRow,
 
         page, // Instead of using 'rows', we'll use page,
-        // which has only the rows for the active page
-
-        // The rest of these things are super handy, too ;)
-        canPreviousPage,
-        canNextPage,
-        pageOptions,
         pageCount,
         gotoPage,
         nextPage,
+        canNextPage,
+        canPreviousPage,
         previousPage,
         // setPageSize,
-        state: { pageIndex, pageSize },
+        state: { pageIndex },
     } = useTable(
         {
             columns: tHeadList as Column<StakesQuery["stakes"][0]>[],
             data: data?.stakes || [],
-            initialState: { pageIndex: 0, pageSize: 5 },
+            initialState: { pageSize: PAGE_SIZE },
             defaultColumn: {
                 Cell: ({ value }: { value: React.ReactNode }) => (
                     <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
@@ -340,9 +337,14 @@ const MyStakingDetailTable = () => {
                     </Text>
                 ),
             },
+            manualPagination: true,
+            pageCount: Math.ceil(counts / PAGE_SIZE),
         },
         usePagination
     );
+    useEffect(() => {
+        setPIndex(pageIndex);
+    }, [pageIndex]);
 
     return (
         <Flex
@@ -352,17 +354,14 @@ const MyStakingDetailTable = () => {
         >
             <Table {...getTableProps()}>
                 <Thead>
-                    {headerGroups.map((headerGroup) => (
-                        <Tr
-                            {...headerGroup.getHeaderGroupProps()}
-                            key={headerGroup.id}
-                        >
-                            {headerGroup.headers.map((column) => (
+                    {headerGroups.map((headerGroup, i) => (
+                        <Tr {...headerGroup.getHeaderGroupProps()} key={i}>
+                            {headerGroup.headers.map((column, hIndex) => (
                                 <Th
                                     p={"24px 0 20px 0"}
                                     {...column.getHeaderProps()}
                                     // isNumeric={column.isNumeric}
-                                    key={column.id}
+                                    key={hIndex}
                                 >
                                     {column.render("Header")}
                                 </Th>
@@ -375,7 +374,7 @@ const MyStakingDetailTable = () => {
                         prepareRow(row);
                         return (
                             <Tr {...row.getRowProps()} key={row.id}>
-                                {row.cells.map((cell, index) => (
+                                {row.cells.map((cell) => (
                                     <Td
                                         p={0}
                                         borderColor={"rgba(255, 255, 255, .1)"}
@@ -399,8 +398,18 @@ const MyStakingDetailTable = () => {
                     })}
                 </Tbody>
             </Table>
-            <Flex mt={"auto"} justifyContent={"flex-end"} alignItems={"center"}>
-                <Box as={"button"} onClick={previousPage} mr={"32px"}>
+            <Flex
+                display={pageCount < 2 ? "none" : "flex"}
+                mt={"auto"}
+                justifyContent={"flex-end"}
+                alignItems={"center"}
+            >
+                <Box
+                    visibility={canPreviousPage ? "visible" : "hidden"}
+                    as={"button"}
+                    onClick={previousPage}
+                    mr={"32px"}
+                >
                     <Image
                         src={"/images/more20_icon@2x.png"}
                         width={22}
@@ -426,6 +435,7 @@ const MyStakingDetailTable = () => {
                 </HStack>
 
                 <Box
+                    visibility={canNextPage ? "visible" : "hidden"}
                     as={"button"}
                     transform={"rotate(180deg)"}
                     onClick={nextPage}

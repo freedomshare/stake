@@ -1,4 +1,5 @@
-schema: "https://graphql-graph-node-bsc.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake"
+# schema: "https://graphql-graph-node-bsc.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake"
+schema: https://graphql-graph-node-mumbai.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake
 documents: "./graphql/*.graphql"
 generates:
   types-and-hooks.ts:
@@ -8,4 +9,5 @@ generates:
       - typescript-react-query
     config:
       fetcher:
-        endpoint: "https://graphql-graph-node-bsc.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake"
+        # endpoint: "https://graphql-graph-node-bsc.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake"
+        endpoint: https://graphql-graph-node-mumbai.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake

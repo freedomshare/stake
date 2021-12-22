@@ -1,0 +1,12 @@
+query stakeMeta(
+    $id: ID!
+    $block: Block_height
+    $subgraphError: _SubgraphErrorPolicy_! = deny
+) {
+    stakeMeta(id: $id, block: $block, subgraphError: $subgraphError) {
+        id
+        staker
+        stakeAmount #total stake amount
+        stakeCount #stake 数量
+    }
+}
