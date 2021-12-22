@@ -11,11 +11,9 @@ import {
 } from "@chakra-ui/react";
 import { footerLinks, socialLinks } from "../store/constant";
 
-
-
 export const Footer = () => {
     return (
-        <Box bg={"#001C1C"} height={"194px"}>
+        <Box bg={"#001C1C"} height={"194px"} width={"100%"}>
             <Center
                 width={"1200px"}
                 m={"auto"}
@@ -91,6 +89,18 @@ export const Footer = () => {
                         >
                             <Image
                                 src={"/images/telegram@2x.png"}
+                                width={"34px"}
+                                height={"34px"}
+                                alt="telegram"
+                            />
+                        </Link>
+                        <Link
+                            href={socialLinks.discord}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <Image
+                                src={"/images/discord@2x.png"}
                                 width={"34px"}
                                 height={"34px"}
                                 alt="telegram"

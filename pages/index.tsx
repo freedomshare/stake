@@ -22,8 +22,14 @@ const Home: NextPage<{
     // }, []);
 
     return (
-        <VStack spacing={"30px"} bg={"#125354"} pt={"43px"} pb={"54px"}>
-            <HStack spacing={"33px"} alignItems={"flex-start"}>
+        <VStack
+            minWidth={"1200px"}
+            spacing={"30px"}
+            bg={"#125354"}
+            pt={"43px"}
+            pb={"54px"}
+        >
+            <HStack spacing={"20px"} alignItems={"flex-start"}>
                 {addr ? (
                     <MyStakingAmountBox />
                 ) : (

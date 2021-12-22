@@ -16,7 +16,7 @@ export const meldUrl =
     "https://pancakeswap.finance/swap?outputCurrency=0xf8ae4ef55628aacfb9bd6e777b0f5d35c173f624";
 
 //my staking detail table page size
-export const PAGE_SIZE = 1;
+export const PAGE_SIZE = 5;
 
 export const footerLinks = [
     {
@@ -32,4 +32,5 @@ export const footerLinks = [
 export const socialLinks = {
     twitter: "https://twitter.com/meland_ai",
     telegram: "https://t.me/melandaiWorld",
+    discord: "https://discord.gg/Jgnx2Wy9GN",
 };

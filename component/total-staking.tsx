@@ -11,7 +11,8 @@ const ViewContractUrl = "/";
 
 export const TotalStakingBox = () => {
     const { isLoading: prizeLoading, data } = useGetMeldPrice();
-    const { data: metaData, isLoading: metaIsLoading } = useTotalStakeMetaData();
+    const { data: metaData, isLoading: metaIsLoading } =
+        useTotalStakeMetaData();
 
     const totalStaking: string = useMemo(
         () =>
@@ -34,8 +35,8 @@ export const TotalStakingBox = () => {
 
     return (
         <Flex
-            width={506}
-            height={382}
+            width={"450px"}
+            height={"394px"}
             flexDirection={"column"}
             padding={"35px 0 37px 30px"}
             bg={"#0A4747"}

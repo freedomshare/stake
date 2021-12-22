@@ -8,6 +8,7 @@ import {
     Center,
     Box,
     TypographyProps,
+    ColorProps,
 } from "@chakra-ui/react";
 import Image from "next/image";
 
@@ -109,11 +110,16 @@ interface IUnitTextProps {
     unit?: React.ReactNode;
     textSize?: TypographyProps["fontSize"];
     unitTextSize?: TypographyProps["fontSize"];
+    textColor?: ColorProps["color"];
 }
 export const UnitText = (p: IUnitTextProps) => {
-    const { text = "", unit, textSize, unitTextSize } = p;
+    const { text = "", unit, textSize, unitTextSize, textColor } = p;
     return (
-        <Text textColor="white" fontSize={textSize} fontWeight={"bold"}>
+        <Text
+            textColor={textColor || "white"}
+            fontSize={textSize}
+            fontWeight={"bold"}
+        >
             {text}
             <Text
                 hidden={!unit}

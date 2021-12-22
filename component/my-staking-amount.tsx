@@ -12,9 +12,8 @@ import {
     Link,
 } from "@chakra-ui/react";
 import { colorSchemeList, MButton } from "./button";
-import { BoxInfo } from "./info-box";
+import { BoxInfo, UnitText } from "./info-box";
 import {
-    getPoolInfo,
     isStakedAtom,
     useAllEarned,
     useHarvest,
@@ -37,13 +36,17 @@ export const MyStakingAmountBox = () => {
     return (
         <VStack
             as={Flex}
-            width={662}
-            height={426}
+            width={"730px"}
+            height={"394px"}
             // flexDirection={"column"}
-            padding={"32px 30px 28px 34px"}
+            padding={"32px 34px 26px 34px"}
             bg={"#0A4747"}
             rounded={"18px"}
             spacing={"20px"}
+            backgroundImage={"url(/images/amountbg@2x.png)"}
+            backgroundRepeat={"no-repeat"}
+            backgroundSize={"100%"}
+            backgroundPosition={"bottom"}
         >
             <MyStakingAmount />
             <Divider bg={"white"} opacity={0.1} mt={"16px!important"} />
@@ -121,12 +124,12 @@ const EarnedMELD = () => {
             <Flex align={"center"}>
                 <Image
                     src={"/images/meld_earned_icon@2x.png"}
-                    width={34}
-                    height={34}
+                    width={30}
+                    height={38}
                     alt="meld earned"
                 />
                 <Box>
-                    <Text color="white" fontSize={"13px"} fontWeight={"bold"}>
+                    <Text color="#537E7E" fontSize={"13px"} fontWeight={"bold"}>
                         MELD earned
                     </Text>
                     <Text color="white" fontSize={"15px"} fontWeight={"bold"}>
@@ -151,42 +154,74 @@ const EarnedMELD = () => {
     );
 };
 
-const userLevelInfo = ({ apy = "", ol = "", ddl = "", dc = "" }) => [
+const userLevelInfo = ({ apy = "--", ol = "--", ddl = "--", dc = "--" }) => [
     {
-        title: "Annual Percentage Yield",
+        title: "Token APY",
         value: apy,
-        icon: "/images/apy_icon@2x.png",
+        icon: "/images/60@2x.png",
         unit: "",
         info: "",
     },
     {
-        title: "Occupation limit",
+        title: "Occupied Land Limit",
         value: ol,
-        icon: "/images/occupation_limit_icon@2x.png",
+        icon: "/images/61@2x.png",
         unit: "LANDS",
         info: "",
     },
     {
-        title: "DItamin/day/land",
+        title: "Ditamin/Land/Day",
         value: ddl,
-        icon: "/images/day_land_icon@2x.png",
+        icon: "/images/62@2x.png",
         unit: "Ditamin",
         info: "",
     },
     {
         title: "Ditamin/Challenge",
         value: dc,
-        icon: "/images/ditaminchallenge_icon@2x.png",
+        icon: "/images/63@2x.png",
         unit: "Ditamin",
         info: "",
     },
 ];
 
+const InfoBox = ({ title, value, icon, unit }: Record<string, string>) => {
+    return (
+        <Flex
+            flexDirection={"column"}
+            width={"160px"}
+            height={"100px"}
+            bg={"#154F4F"}
+            rounded={"10px"}
+            pl={"18px"}
+            pt={"15px"}
+        >
+            <Box>
+                <Image src={icon} width={28} height={28} alt={title} />
+            </Box>
+            <Text
+                fontSize={"12px"}
+                fontWeight={"bold"}
+                color="#537E7E"
+                mb={"-3px"}
+            >
+                {title}
+            </Text>
+            <UnitText
+                text={value}
+                unit={unit}
+                textSize={"16px"}
+                unitTextSize={"12px"}
+            />
+        </Flex>
+    );
+};
+
 const FourBox = React.memo(() => {
     const { data } = useLevelInfoQuery();
     console.log("data", data);
     return (
-        <Grid templateColumns={"repeat(2,1fr)"} gap={"15px 26px"}>
+        <Grid templateColumns={"repeat(4,1fr)"} gap={"10px"}>
             {userLevelInfo(
                 data?.stakePercent !== undefined
                     ? {
@@ -197,7 +232,7 @@ const FourBox = React.memo(() => {
                       }
                     : {}
             ).map((item) => (
-                <BoxInfo {...item} key={item.title} info={item.info} />
+                <InfoBox {...item} key={item.title} />
             ))}
         </Grid>
     );
@@ -219,7 +254,12 @@ const GetMeldRow = () => {
                 justifyContent={"center"}
                 onClick={scrollToMyStakingDetail}
             >
-                <Text color="white" mr={"4px"}>
+                <Text
+                    color="white"
+                    mr={"4px"}
+                    fontSize={"12px"}
+                    fontWeight={"bold"}
+                >
                     view more
                 </Text>
                 <Box position={"relative"} top={"2px"}>

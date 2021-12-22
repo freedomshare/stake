@@ -1,3 +1,8 @@
+body {
+    background-color: #125354;
+    min-width: 1200px;
+}
+
 @font-face {
     font-family: "Furore";
     src: url(/fonts/furore.woff2) format("woff2");
@@ -16,6 +21,7 @@
 ::-webkit-scrollbar {
     background: #12544a;
     width: 4px;
+    height: 4px;
     cursor: pointer;
 }
 

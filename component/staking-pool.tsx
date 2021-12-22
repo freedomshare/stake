@@ -1,13 +1,21 @@
 import Image from "next/image";
-import { Text, Box, Flex, Tooltip, Center, Button } from "@chakra-ui/react";
+import {
+    Text,
+    Box,
+    Flex,
+    Tooltip,
+    Center,
+    Button,
+    VStack,
+    HStack,
+} from "@chakra-ui/react";
 import { UnitText } from "./info-box";
 import { colorSchemeList, MButton } from "./button";
 import { StakePoolsQuery, useStakePoolsQuery } from "../types-and-hooks";
-import { stake } from "../lib/stake";
 import { useMutation } from "react-query";
 import { stakeByPoolId } from "../store/stake";
 import { BigNumber } from "bignumber.js";
-import { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 
 const totalApy = "totalApy" as const;
 const StakingPoolList: {
@@ -19,20 +27,20 @@ const StakingPoolList: {
 }[] = [
     {
         img: "/images/apyhui_icon@2x.png",
-        title: "Annual Percentage Yield",
-        field: "stakeApyPercent",
+        title: "Max APY",
+        field: "totalApy",
         unit: "",
     },
     {
         img: "/images/occupationhuit_icon@2x.png",
-        title: "Occupation limit",
-        info: "Occupation limit",
+        title: "Occupied Land Limit",
+        info: "Occupied Land Limit",
         field: "landC",
         unit: "LANDS",
     },
     {
         img: "/images/day_landhui_icon@2x.png",
-        title: "DItamin/day/land",
+        title: "Ditamin/Land/Day",
         field: "ditaminLD",
         unit: "DITAMIN",
     },
@@ -45,21 +53,17 @@ const StakingPoolList: {
     },
     {
         img: "/images/stakeamount_icon@2x.png",
-        title: "Stake amount",
+        title: "Stake Amount",
+        info: "Stake Amoun",
         field: "salesCount",
         unit: "MELD",
     },
     {
         img: "/images/stakeduration_icon@2x.png",
-        title: "Stake duration",
-        info: "Stake duration",
+        title: "Stake Duration",
+        info: "",
         field: "freezeTimeAtSeconds",
         unit: "DAYS",
-    },
-    {
-        img: "/images/maxapy_icon@2x.png",
-        title: "Max APY ",
-        field: totalApy,
     },
 ];
 
@@ -67,8 +71,10 @@ const StakingPoolLabel = () => {
     return (
         <Box pt={"68px"} pb={"84px"}>
             {StakingPoolList.map((item, index) => (
-                <Flex
-                    alignItems={"center"}
+                <VStack
+                    alignItems={"flex-start"}
+                    justifyContent={"center"}
+                    flexDirection={"column"}
                     border="2px solid rgba(255, 255, 255, 0.1)"
                     borderLeft={"none"}
                     borderRight={"none"}
@@ -77,52 +83,95 @@ const StakingPoolLabel = () => {
                             ? "none"
                             : "2px solid rgba(255, 255, 255, 0.1)"
                     }
-                    height={"75px"}
+                    height={index === 0 ? "154px" : "75px"}
                     width={"291px"}
                     key={item.title}
+                    spacing={"16px"}
                 >
-                    <Image
-                        src={item.img}
-                        width={34}
-                        height={34}
-                        alt="Annual Percentage Yield"
-                    />
-                    <Text
-                        ml={"6px"}
-                        color={"white"}
-                        fontSize={"14px"}
-                        fontWeight={"bold"}
-                    >
-                        {item.title}
-                    </Text>
-                    {item.info && (
-                        <Tooltip
-                            label={
-                                <Center minWidth={"323px"} minHeight={"72px"}>
-                                    {item.info}
-                                </Center>
-                            }
-                            hasArrow
-                            bg={"#282c2b"}
+                    <Flex alignItems={"center"}>
+                        <Image
+                            src={item.img}
+                            width={34}
+                            height={34}
+                            alt="Annual Percentage Yield"
+                        />
+                        <Text
+                            ml={"6px"}
                             color={"white"}
-                            rounded={"10px"}
+                            fontSize={"14px"}
+                            fontWeight={"bold"}
                         >
-                            <Box
-                                as={"span"}
-                                position={"relative"}
-                                left={"4px"}
-                                top={"1px"}
+                            {item.title}
+                        </Text>
+                        {item.info && (
+                            <Tooltip
+                                label={
+                                    <Center
+                                        minWidth={"323px"}
+                                        minHeight={"72px"}
+                                    >
+                                        {item.info}
+                                    </Center>
+                                }
+                                hasArrow
+                                bg={"#282c2b"}
+                                color={"white"}
+                                rounded={"10px"}
                             >
-                                <Image
-                                    src={"/images/xiangqing2_icon@2x.png"}
-                                    width={14}
-                                    height={14}
-                                    alt={item.info}
-                                />
-                            </Box>
-                        </Tooltip>
-                    )}
-                </Flex>
+                                <Box
+                                    as={"span"}
+                                    position={"relative"}
+                                    left={"4px"}
+                                    top={"1px"}
+                                >
+                                    <Image
+                                        src={"/images/xiangqing2_icon@2x.png"}
+                                        width={14}
+                                        height={14}
+                                        alt={item.info}
+                                    />
+                                </Box>
+                            </Tooltip>
+                        )}
+                    </Flex>
+                    <VStack
+                        hidden={index !== 0}
+                        alignItems={"flex-start"}
+                        pl={"56px"}
+                        spacing={"16px"}
+                    >
+                        <HStack>
+                            <Image
+                                src={"/images/apyhui_icon2@2x.png"}
+                                width={22}
+                                height={22}
+                                alt="apy"
+                            />
+                            <Text
+                                color={"rgba(255, 255, 255, 0.5)"}
+                                fontSize={"12px"}
+                                fontWeight={"bold"}
+                            >
+                                Token APY
+                            </Text>
+                        </HStack>
+                        <HStack>
+                            <Image
+                                src={"/images/65@2x.png"}
+                                width={22}
+                                height={22}
+                                alt="apy"
+                            />
+                            <Text
+                                color={"rgba(255, 255, 255, 0.5)"}
+                                fontSize={"12px"}
+                                fontWeight={"bold"}
+                            >
+                                Gaming Income APY
+                            </Text>
+                        </HStack>
+                    </VStack>
+                </VStack>
             ))}
         </Box>
     );
@@ -177,6 +226,7 @@ const AccessList = (p: IAccessListProps) => {
             mutate(stakePoolId);
         }
     }, [data, dataIndex, mutate]);
+
     return (
         <Flex
             flexDirection={"column"}
@@ -245,21 +295,57 @@ const AccessList = (p: IAccessListProps) => {
                             ? "none"
                             : "2px solid rgba(255, 255, 255, 0.1)"
                     }
-                    height={"75px"}
+                    height={item.field === totalApy ? "154px" : "75px"}
                     width={"208px"}
                     key={item.title}
                 >
-                    <UnitText
-                        text={
-                            item.field === totalApy
-                                ? Number(data?.[dataIndex]?.gameApyPercent) +
-                                  Number(data?.[dataIndex]?.stakeApyPercent)
-                                : data?.[dataIndex]?.[item.field]
-                        }
-                        unit={item.unit}
-                        textSize={"18px"}
-                        unitTextSize={"18px"}
-                    />
+                    <VStack
+                        height={item.field === totalApy ? "100%" : "auto"}
+                        pt={item.field === totalApy ? "24px" : "auto"}
+                        spacing={"15px"}
+                    >
+                        <Box>
+                            <UnitText
+                                text={
+                                    item.field === totalApy
+                                        ? Number(
+                                              data?.[dataIndex]?.gameApyPercent
+                                          ) +
+                                          Number(
+                                              data?.[dataIndex]?.stakeApyPercent
+                                          ) +
+                                          "%"
+                                        : data?.[dataIndex]?.[item.field] 
+                                }
+                                unit={item.unit}
+                                textSize={"16px"}
+                                unitTextSize={"12px"}
+                            />
+                        </Box>
+
+                        {item.field === totalApy && (
+                            <>
+                                <UnitText
+                                    text={
+                                        data?.[dataIndex]?.stakeApyPercent + "%"
+                                    }
+                                    unit={item.unit}
+                                    textColor={"rgba(255, 255, 255, 0.5)"}
+                                    textSize={"16px"}
+                                    unitTextSize={"12px"}
+                                />
+                                <UnitText
+                                    text={
+                                        data?.[dataIndex]?.gameApyPercent + "%"
+                                    }
+                                    unit={item.unit}
+                                    textColor={"rgba(255, 255, 255, 0.5)"}
+                                    textSize={"16px"}
+                                    unitTextSize={"12px"}
+                                />
+                            </>
+                        )}
+                    </VStack>
                 </Center>
             ))}
             <Center height={"84px"}>

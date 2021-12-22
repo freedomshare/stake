@@ -14,6 +14,7 @@ import {
     ButtonProps,
     Square,
     HStack,
+    TextProps,
 } from "@chakra-ui/react";
 import { Column, useTable, usePagination } from "react-table";
 import { MButton } from "./button";
@@ -112,10 +113,8 @@ const totalRevenue = (
     );
 };
 
-const THeadTitle: React.FC<{}> = ({ children }) => (
-    <Text color={"rgba(255,255,255,.3)"} fontSize={12}>
-        {children}
-    </Text>
+const THeadTitle = (p: TextProps) => (
+    <Text color={"rgba(255,255,255,.3)"} fontSize={12} {...p} />
 );
 type TColumn = StakesQuery["stakes"][0] & {
     $icon?: string;
@@ -127,20 +126,13 @@ const tHeadList: Column<TColumn>[] = [
         width: 137,
         Header: "",
         Cell: () => (
-            <Box sx={{ pl: "37px" }}>
-                <Center
-                    width={"66px"}
-                    height={"66px"}
-                    bg={"#6a704a"}
-                    rounded={"9999px"}
-                >
-                    <Image
-                        src={"/images/logo@2x.png"}
-                        width={65}
-                        height={38}
-                        alt="logo"
-                    />
-                </Center>
+            <Box sx={{ pl: "34px" }}>
+                <Image
+                    src={"/images/detaillogo@2x.png"}
+                    width={67}
+                    height={55}
+                    alt="logo"
+                />
             </Box>
         ),
         accessor: "$icon",
@@ -148,7 +140,7 @@ const tHeadList: Column<TColumn>[] = [
 
     {
         width: 117 + 37,
-        Header: <THeadTitle>Status</THeadTitle>,
+        Header: <THeadTitle pl={"28px"}>Status</THeadTitle>,
         accessor: "id",
         Cell: ({ cell }) => (
             <Status
