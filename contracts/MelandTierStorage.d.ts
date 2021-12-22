@@ -21,10 +21,25 @@ import type {TypedEventFilter, TypedEvent, TypedListener} from "./common";
 
 interface MelandTierStorageInterface extends ethers.utils.Interface {
   functions: {
+    "erc1155RewardById(uint256)": FunctionFragment;
+    "erc20RewardById(uint256)": FunctionFragment;
+    "erc721RewardById(uint256)": FunctionFragment;
     "addOptionReward(uint256,tuple[],tuple[],tuple[])": FunctionFragment;
     "add100PercentReward(uint256,tuple[],tuple[],tuple[])": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "erc1155RewardById",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "erc20RewardById",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "erc721RewardById",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "addOptionReward",
     values: [
@@ -44,6 +59,18 @@ interface MelandTierStorageInterface extends ethers.utils.Interface {
     ]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "erc1155RewardById",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "erc20RewardById",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "erc721RewardById",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "addOptionReward",
     data: BytesLike
@@ -54,13 +81,24 @@ interface MelandTierStorageInterface extends ethers.utils.Interface {
   ): Result;
 
   events: {
+    "CreateReward(uint256,uint256[],uint256[],uint256[])": EventFragment;
     "RewaardPoolUpdate(uint256)": EventFragment;
     "TierStartSale(uint256)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "CreateReward"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RewaardPoolUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TierStartSale"): EventFragment;
 }
+
+export type CreateRewardEvent = TypedEvent<
+  [BigNumber, BigNumber[], BigNumber[], BigNumber[]] & {
+    rewardId: BigNumber;
+    erc1155RewardIds: BigNumber[];
+    erc721RewardIds: BigNumber[];
+    erc20RewardIds: BigNumber[];
+  }
+>;
 
 export type RewaardPoolUpdateEvent = TypedEvent<[BigNumber] & {cid: BigNumber}>;
 
@@ -110,6 +148,21 @@ export class MelandTierStorage extends BaseContract {
   interface: MelandTierStorageInterface;
 
   functions: {
+    erc1155RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string] & {erc1155: string}>;
+
+    erc20RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & {erc20: string; amount: BigNumber}>;
+
+    erc721RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & {erc721: string; tokenId: BigNumber}>;
+
     addOptionReward(
       cid: BigNumberish,
       erc1155rewards: {
@@ -134,6 +187,21 @@ export class MelandTierStorage extends BaseContract {
       overrides?: Overrides & {from?: string | Promise<string>}
     ): Promise<ContractTransaction>;
   };
+
+  erc1155RewardById(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  erc20RewardById(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<[string, BigNumber] & {erc20: string; amount: BigNumber}>;
+
+  erc721RewardById(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<[string, BigNumber] & {erc721: string; tokenId: BigNumber}>;
 
   addOptionReward(
     cid: BigNumberish,
@@ -160,6 +228,21 @@ export class MelandTierStorage extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    erc1155RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    erc20RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & {erc20: string; amount: BigNumber}>;
+
+    erc721RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & {erc721: string; tokenId: BigNumber}>;
+
     addOptionReward(
       cid: BigNumberish,
       erc1155rewards: {
@@ -186,6 +269,36 @@ export class MelandTierStorage extends BaseContract {
   };
 
   filters: {
+    "CreateReward(uint256,uint256[],uint256[],uint256[])"(
+      rewardId?: BigNumberish | null,
+      erc1155RewardIds?: null,
+      erc721RewardIds?: null,
+      erc20RewardIds?: null
+    ): TypedEventFilter<
+      [BigNumber, BigNumber[], BigNumber[], BigNumber[]],
+      {
+        rewardId: BigNumber;
+        erc1155RewardIds: BigNumber[];
+        erc721RewardIds: BigNumber[];
+        erc20RewardIds: BigNumber[];
+      }
+    >;
+
+    CreateReward(
+      rewardId?: BigNumberish | null,
+      erc1155RewardIds?: null,
+      erc721RewardIds?: null,
+      erc20RewardIds?: null
+    ): TypedEventFilter<
+      [BigNumber, BigNumber[], BigNumber[], BigNumber[]],
+      {
+        rewardId: BigNumber;
+        erc1155RewardIds: BigNumber[];
+        erc721RewardIds: BigNumber[];
+        erc20RewardIds: BigNumber[];
+      }
+    >;
+
     "RewaardPoolUpdate(uint256)"(
       cid?: BigNumberish | null
     ): TypedEventFilter<[BigNumber], {cid: BigNumber}>;
@@ -204,6 +317,21 @@ export class MelandTierStorage extends BaseContract {
   };
 
   estimateGas: {
+    erc1155RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    erc20RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    erc721RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     addOptionReward(
       cid: BigNumberish,
       erc1155rewards: {
@@ -230,6 +358,21 @@ export class MelandTierStorage extends BaseContract {
   };
 
   populateTransaction: {
+    erc1155RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    erc20RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    erc721RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     addOptionReward(
       cid: BigNumberish,
       erc1155rewards: {

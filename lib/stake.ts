@@ -24,6 +24,17 @@ export async function stake(
     return stakeTx.wait();
 }
 
+// 添加质押
+export async function claim(
+    stakeAddress: string,
+    provider: Web3Provider,
+    stakePoolId: BigNumber
+) {
+    const melandStakes = MelandStakes__factory.connect(stakeAddress, provider.getSigner());
+    const claimTx = await melandStakes.claim(stakePoolId);
+    return claimTx.wait();
+}
+
 // 获取当前最高质押等级.
 export async function getHighestLevelStakeInfo(
     stakeAddress: string,

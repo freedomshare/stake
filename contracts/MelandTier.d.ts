@@ -32,6 +32,9 @@ interface MelandTierInterface extends ethers.utils.Interface {
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
     "burn(address,uint256,uint256)": FunctionFragment;
     "burnBatch(address,uint256[],uint256[])": FunctionFragment;
+    "erc1155RewardById(uint256)": FunctionFragment;
+    "erc20RewardById(uint256)": FunctionFragment;
+    "erc721RewardById(uint256)": FunctionFragment;
     "getCidByTokenId(uint256)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
     "grantRole(bytes32,address)": FunctionFragment;
@@ -102,6 +105,18 @@ interface MelandTierInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "burnBatch",
     values: [string, BigNumberish[], BigNumberish[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "erc1155RewardById",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "erc20RewardById",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "erc721RewardById",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getCidByTokenId",
@@ -209,6 +224,18 @@ interface MelandTierInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "burnBatch", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "erc1155RewardById",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "erc20RewardById",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "erc721RewardById",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getCidByTokenId",
     data: BytesLike
   ): Result;
@@ -271,6 +298,7 @@ interface MelandTierInterface extends ethers.utils.Interface {
     "AdminChanged(address,address)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
     "BeaconUpgraded(address)": EventFragment;
+    "CreateReward(uint256,uint256[],uint256[],uint256[])": EventFragment;
     "RewaardPoolUpdate(uint256)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
@@ -285,6 +313,7 @@ interface MelandTierInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "AdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "BeaconUpgraded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "CreateReward"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RewaardPoolUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
@@ -309,6 +338,15 @@ export type ApprovalForAllEvent = TypedEvent<
 >;
 
 export type BeaconUpgradedEvent = TypedEvent<[string] & {beacon: string}>;
+
+export type CreateRewardEvent = TypedEvent<
+  [BigNumber, BigNumber[], BigNumber[], BigNumber[]] & {
+    rewardId: BigNumber;
+    erc1155RewardIds: BigNumber[];
+    erc721RewardIds: BigNumber[];
+    erc20RewardIds: BigNumber[];
+  }
+>;
 
 export type RewaardPoolUpdateEvent = TypedEvent<[BigNumber] & {cid: BigNumber}>;
 
@@ -463,6 +501,21 @@ export class MelandTier extends BaseContract {
       values: BigNumberish[],
       overrides?: Overrides & {from?: string | Promise<string>}
     ): Promise<ContractTransaction>;
+
+    erc1155RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string] & {erc1155: string}>;
+
+    erc20RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & {erc20: string; amount: BigNumber}>;
+
+    erc721RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & {erc721: string; tokenId: BigNumber}>;
 
     getCidByTokenId(
       id: BigNumberish,
@@ -716,6 +769,21 @@ export class MelandTier extends BaseContract {
     overrides?: Overrides & {from?: string | Promise<string>}
   ): Promise<ContractTransaction>;
 
+  erc1155RewardById(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  erc20RewardById(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<[string, BigNumber] & {erc20: string; amount: BigNumber}>;
+
+  erc721RewardById(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<[string, BigNumber] & {erc721: string; tokenId: BigNumber}>;
+
   getCidByTokenId(
     id: BigNumberish,
     overrides?: CallOverrides
@@ -968,6 +1036,21 @@ export class MelandTier extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    erc1155RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    erc20RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & {erc20: string; amount: BigNumber}>;
+
+    erc721RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string, BigNumber] & {erc721: string; tokenId: BigNumber}>;
+
     getCidByTokenId(
       id: BigNumberish,
       overrides?: CallOverrides
@@ -1186,6 +1269,36 @@ export class MelandTier extends BaseContract {
     BeaconUpgraded(
       beacon?: string | null
     ): TypedEventFilter<[string], {beacon: string}>;
+
+    "CreateReward(uint256,uint256[],uint256[],uint256[])"(
+      rewardId?: BigNumberish | null,
+      erc1155RewardIds?: null,
+      erc721RewardIds?: null,
+      erc20RewardIds?: null
+    ): TypedEventFilter<
+      [BigNumber, BigNumber[], BigNumber[], BigNumber[]],
+      {
+        rewardId: BigNumber;
+        erc1155RewardIds: BigNumber[];
+        erc721RewardIds: BigNumber[];
+        erc20RewardIds: BigNumber[];
+      }
+    >;
+
+    CreateReward(
+      rewardId?: BigNumberish | null,
+      erc1155RewardIds?: null,
+      erc721RewardIds?: null,
+      erc20RewardIds?: null
+    ): TypedEventFilter<
+      [BigNumber, BigNumber[], BigNumber[], BigNumber[]],
+      {
+        rewardId: BigNumber;
+        erc1155RewardIds: BigNumber[];
+        erc721RewardIds: BigNumber[];
+        erc20RewardIds: BigNumber[];
+      }
+    >;
 
     "RewaardPoolUpdate(uint256)"(
       cid?: BigNumberish | null
@@ -1407,6 +1520,21 @@ export class MelandTier extends BaseContract {
       ids: BigNumberish[],
       values: BigNumberish[],
       overrides?: Overrides & {from?: string | Promise<string>}
+    ): Promise<BigNumber>;
+
+    erc1155RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    erc20RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    erc721RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getCidByTokenId(
@@ -1641,6 +1769,21 @@ export class MelandTier extends BaseContract {
       ids: BigNumberish[],
       values: BigNumberish[],
       overrides?: Overrides & {from?: string | Promise<string>}
+    ): Promise<PopulatedTransaction>;
+
+    erc1155RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    erc20RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    erc721RewardById(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getCidByTokenId(

@@ -44,6 +44,7 @@ interface MelandStakesInterface extends ethers.utils.Interface {
     "getUserCurrentHighLevelStake(address)": FunctionFragment;
     "stake(uint256)": FunctionFragment;
     "harvest()": FunctionFragment;
+    "claim(uint256)": FunctionFragment;
     "getStakerAllEarned()": FunctionFragment;
     "withdraw(uint256)": FunctionFragment;
   };
@@ -124,6 +125,7 @@ interface MelandStakesInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "stake", values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: "harvest", values?: undefined): string;
+  encodeFunctionData(functionFragment: "claim", values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: "getStakerAllEarned",
     values?: undefined
@@ -194,6 +196,7 @@ interface MelandStakesInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "stake", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "harvest", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "claim", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getStakerAllEarned",
     data: BytesLike
@@ -464,6 +467,11 @@ export class MelandStakes extends BaseContract {
       overrides?: Overrides & {from?: string | Promise<string>}
     ): Promise<ContractTransaction>;
 
+    claim(
+      stakePoolId: BigNumberish,
+      overrides?: Overrides & {from?: string | Promise<string>}
+    ): Promise<ContractTransaction>;
+
     getStakerAllEarned(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     withdraw(
@@ -623,6 +631,11 @@ export class MelandStakes extends BaseContract {
     overrides?: Overrides & {from?: string | Promise<string>}
   ): Promise<ContractTransaction>;
 
+  claim(
+    stakePoolId: BigNumberish,
+    overrides?: Overrides & {from?: string | Promise<string>}
+  ): Promise<ContractTransaction>;
+
   getStakerAllEarned(overrides?: CallOverrides): Promise<BigNumber>;
 
   withdraw(
@@ -774,6 +787,8 @@ export class MelandStakes extends BaseContract {
     stake(stakePoolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     harvest(overrides?: CallOverrides): Promise<void>;
+
+    claim(stakePoolId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     getStakerAllEarned(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1039,6 +1054,11 @@ export class MelandStakes extends BaseContract {
       overrides?: Overrides & {from?: string | Promise<string>}
     ): Promise<BigNumber>;
 
+    claim(
+      stakePoolId: BigNumberish,
+      overrides?: Overrides & {from?: string | Promise<string>}
+    ): Promise<BigNumber>;
+
     getStakerAllEarned(overrides?: CallOverrides): Promise<BigNumber>;
 
     withdraw(
@@ -1170,6 +1190,11 @@ export class MelandStakes extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     harvest(
+      overrides?: Overrides & {from?: string | Promise<string>}
+    ): Promise<PopulatedTransaction>;
+
+    claim(
+      stakePoolId: BigNumberish,
       overrides?: Overrides & {from?: string | Promise<string>}
     ): Promise<PopulatedTransaction>;
 
