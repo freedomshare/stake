@@ -98,7 +98,7 @@ const totalRevenue = (
     // let freezeTime = BigNumber.from(freezeTimeAtSeconds);
     let numberOfMELDBig = BigNumber.from(numberOfMELD);
     let stakeApyPercentBig = BigNumber.from(stakeApyPercent);
-    if (min.gt(max)) {
+    if (min.lt(max)) {
         max = min;
     }
     return fromWei(
