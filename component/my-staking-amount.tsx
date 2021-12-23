@@ -139,9 +139,9 @@ const EarnedMELD = () => {
 
     const earned: string = useMemo(() => {
         if (data !== undefined) {
-            return fromWei(data?.toString() || "");
+            return fromWei(data?.toString() || "0");
         }
-        return "";
+        return "0";
     }, [data]);
 
     return (
