@@ -352,11 +352,20 @@ const StakeButtonGroup = () => {
             justifyContent={"flex-end"}
             pt={"80px"}
         >
-            <MButton variant={"outline"} mScheme={"white"}>
+            <MButton
+                as={Link}
+                //@ts-ignore
+                href={meldUrl}
+                target={"_blank"}
+                rel="noopener noreferrer"
+                variant={"outline"}
+                mScheme="white"
+            >
                 Get MELD
             </MButton>
             <MButton
                 {...colorSchemeList.yellow._hover}
+                borderColor={colorSchemeList.yellow.borderColor}
                 _hover={colorSchemeList.yellow._hover}
                 _active={colorSchemeList.yellow._hover}
                 mScheme={"yellow"}
