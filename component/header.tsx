@@ -14,14 +14,14 @@ import { connectWallet, userAddressAtom } from "../store/address";
 import { useMeld } from "../store/stake";
 import { fromWei } from "web3-utils";
 import { MNumberFormat } from "./number-format";
-
+import { ViewContractUrl } from "../store/constant";
 
 export const Header = () => {
     const addr = useStore(userAddressAtom);
     const { onCopy } = useClipboard(addr);
 
     const isConnectWallet = useMemo(() => addr && addr !== "", [addr]);
-    const walletAddress = useMemo(
+    const shortAddr = useMemo(
         () => addr.slice(0, 5) + "..." + addr.slice(-4),
         [addr]
     );
@@ -159,8 +159,16 @@ export const Header = () => {
                         fontSize={"14px"}
                         title={addr}
                         onClick={onCopy}
+                        as={"a"}
+                        target={"_blank"}
+                        rel="noopener noreferrer"
+                        href={
+                            ViewContractUrl.split("/").slice(0, -1).join("/") +
+                            "/" +
+                            addr
+                        }
                     >
-                        {walletAddress}
+                        {shortAddr}
                     </Text>
                     <Center>
                         <Image
