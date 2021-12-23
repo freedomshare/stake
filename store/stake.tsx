@@ -2,8 +2,11 @@ import { useToast, UseToastOptions } from "@chakra-ui/react";
 import { useStore } from "@nanostores/react";
 import { BigNumber } from "ethers";
 import { atom } from "nanostores";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+    stakeSuccessFn,
+} from "../component/stake-result-modal";
 import {
     claim,
     getAllEarned,
@@ -17,9 +20,7 @@ import {
     OrderDirection,
     Stake_OrderBy,
     useMetaQuery,
-    useStakeMetaQuery,
     useStakeMetaSQuery,
-    useStakePoolQuery,
     useStakesQuery,
 } from "../types-and-hooks";
 import { userAddressAtom } from "./address";
@@ -150,13 +151,16 @@ let hasCompleted: Record<string, boolean> = {};
  * @param param0
  * @returns
  */
+
 export const useBlockIndexIsSuccess = ({
     blockNumber,
     toastOption,
+    onSuccess,
 }: {
     blockNumber?: number;
     toastOption?: UseToastOptions;
     stopRefresh?: boolean;
+    onSuccess?: () => void;
 }) => {
     const toast = useToast();
     const queryClient = useQueryClient();
@@ -182,6 +186,7 @@ export const useBlockIndexIsSuccess = ({
                         ...toastOption,
                     });
                 hasCompleted[blockNumber + ""] = true;
+                onSuccess && onSuccess();
                 allQueriesKey.forEach((key) =>
                     queryClient.invalidateQueries(key)
                 );
@@ -201,6 +206,9 @@ export const useStakePoolAction = () => {
 
     const query = useBlockIndexIsSuccess({
         blockNumber: mutation?.data?.blockNumber,
+        onSuccess: () => {
+            stakeSuccessFn(mutation?.data?.transactionHash!);
+        },
     });
     return {
         mutation,

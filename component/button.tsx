@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@chakra-ui/react";
 
-import type { ButtonProps, ColorProps } from "@chakra-ui/react";
+import type { ButtonProps } from "@chakra-ui/react";
 
 const yellowColor = "#F5C52A";
 const transparentColor = "transparent";
@@ -44,10 +44,28 @@ export const colorSchemeList = {
             cursor: "not-allowed",
         },
     },
+    close: {
+        color: "#BDBDBD",
+        borderColor: "#BDBDBD",
+        _hover: {
+            backgroundColor: "#BDBDBD",
+            color: "#FFFFFF",
+        },
+        _selected: {
+            backgroundColor: whiteContrast,
+            color: "#FFFFFF",
+        },
+        _disabled: {
+            border: "none!important",
+            backgroundColor: "rgba(255, 255, 255, .05)!important",
+            color: "rgba(255, 255, 255, .2)!important",
+            cursor: "not-allowed",
+        },
+    },
 };
 
 type Props = ButtonProps & {
-    mScheme: "yellow" | "white";
+    mScheme: keyof typeof colorSchemeList
 };
 
 export const MButton = (props: Props) => {

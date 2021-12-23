@@ -22,6 +22,7 @@ import React, { useCallback, useEffect, useMemo } from "react";
 import { MNumberFormat } from "./number-format";
 import { fromWei } from "web3-utils";
 import { useStore } from "@nanostores/react";
+import { stakeFailFn } from "./stake-result-modal";
 
 const totalApy = "totalApy" as const;
 const numberOfMELD = "numberOfMELD" as const;
@@ -225,37 +226,8 @@ const AccessList = (p: IAccessListProps) => {
     const toast = useToast();
 
     useEffect(() => {
-        const isSuccess = mutation.isSuccess && query.isSuccess;
-        const mutateBlockNumber = mutation?.data?.blockNumber;
-        const queryBlockNumber = query?.data?._meta?.block?.number;
-        if (
-            isSuccess &&
-            mutateBlockNumber &&
-            queryBlockNumber &&
-            mutateBlockNumber <= queryBlockNumber
-        ) {
-            toast({
-                status: "success",
-                position: "top",
-                title: `Successfully joined the ${field} access taking pool `,
-            });
-        }
-    }, [
-        field,
-        mutation?.data?.blockNumber,
-        mutation.isSuccess,
-        query?.data?._meta?.block?.number,
-        query.isSuccess,
-        toast,
-    ]);
-
-    useEffect(() => {
         if (mutation.error) {
-            toast({
-                status: "error",
-                position: "top",
-                title: `the contract interaction is abnormal and he stake has failed , please try again later`,
-            });
+            stakeFailFn()
         }
     }, [mutation.error, toast]);
 

@@ -10,6 +10,7 @@ import { NotConnectWalletBox } from "../component/unconnect-wallet-box";
 import { useStore } from "@nanostores/react";
 import { connectWallet, userAddressAtom } from "../store/address";
 import { isStakedAtom } from "../store/stake";
+import { StakeModal } from "../component/stake-result-modal";
 
 const Home: NextPage<{
     networkName: string;
@@ -43,6 +44,7 @@ const Home: NextPage<{
             pt={"43px"}
             pb={"54px"}
         >
+            <StakeModal />
             <HStack spacing={"20px"} alignItems={"flex-start"}>
                 {addr ? (
                     <MyStakingAmountBox />
