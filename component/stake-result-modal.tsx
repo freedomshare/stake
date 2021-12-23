@@ -12,7 +12,7 @@ import { atom } from "nanostores";
 import { networkName, txUrlMap } from "../store/constant";
 import { MButton } from "./button";
 
-const successText = "Successfully joined the xx access staking pool.";
+const successText = "Successfully joined the access staking pool.";
 const failText =
     "The contract interaction is abnormal and the stake has failed. Please try again.";
 

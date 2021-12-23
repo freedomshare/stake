@@ -427,7 +427,7 @@ const MyStakingDetailTable = () => {
                                             "2px sold rgba(255, 255, 255, 1)"
                                         }
                                         {...cell.getCellProps()}
-                                        key={row.id}
+                                        key={cell.getCellProps().key}
                                     >
                                         {cell.render("Cell")}
                                     </Td>
@@ -464,7 +464,7 @@ const MyStakingDetailTable = () => {
                         pageCount,
                     }).map((item, index) => (
                         <IndexButton
-                            key={index}
+                            key={item + "" + index}
                             onClick={() => gotoPage(item - 1)}
                             isActive={pageIndex === item - 1}
                         >
