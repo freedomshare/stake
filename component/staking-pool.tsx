@@ -22,7 +22,7 @@ import React, { useCallback, useEffect, useMemo } from "react";
 import { MNumberFormat } from "./number-format";
 import { fromWei } from "web3-utils";
 import { useStore } from "@nanostores/react";
-import { stakeFailFn } from "./stake-result-modal";
+import { setActiveStakeLevel, stakeFailFn } from "./stake-result-modal";
 
 const totalApy = "totalApy" as const;
 const numberOfMELD = "numberOfMELD" as const;
@@ -250,8 +250,10 @@ const AccessList = (p: IAccessListProps) => {
 
     const stakeFn = useCallback(() => {
         const stakePoolId = data?.[dataIndex]?.id;
+        const name = data?.[dataIndex]?.vipname;
         if (stakePoolId) {
             mutate(stakePoolId);
+            setActiveStakeLevel(name);
         }
     }, [data, dataIndex, mutate]);
 

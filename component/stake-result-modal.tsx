@@ -12,13 +12,19 @@ import { atom } from "nanostores";
 import { networkName, txUrlMap } from "../store/constant";
 import { MButton } from "./button";
 
-const successText = "Successfully joined the access staking pool.";
+const getSuccessText = (level = "Free") =>
+    `Successfully joined the ${level} access staking pool.`;
 const failText =
     "The contract interaction is abnormal and the stake has failed. Please try again.";
 
 export const isStakeModalOpenAtom = atom(false);
 export const isSuccessStakedAtom = atom(false);
 export const activeTXAtom = atom<string>("");
+export const activeStakeLevelAtom = atom("free");
+
+export const setActiveStakeLevel = (level: string) => {
+    activeStakeLevelAtom.set(level);
+};
 
 export const setCurrentStakeTx = (s: string) => {
     activeTXAtom.set(s);
@@ -39,6 +45,7 @@ export const closeStakeModal = () => {
     isStakeModalOpenAtom.set(false);
     resetStakeStatus();
     setCurrentStakeTx("");
+    setActiveStakeLevel("Free");
 };
 
 export const stakeSuccessFn = (tx: string) => {
@@ -56,6 +63,7 @@ export function StakeModal() {
     const isOpen = useStore(isStakeModalOpenAtom);
     const isSuccessStaked = useStore(isSuccessStakedAtom);
     const tx = useStore(activeTXAtom);
+    const level = useStore(activeStakeLevelAtom);
     const viewTX = () => {
         closeStakeModal();
         window.open(`${txUrlMap[networkName!]}/${tx}`, "_blank");
@@ -87,7 +95,9 @@ export function StakeModal() {
                                 fontSize={"16px"}
                                 fontWeight={"bold"}
                             >
-                                {isSuccessStaked ? successText : failText}
+                                {isSuccessStaked
+                                    ? getSuccessText(level)
+                                    : failText}
                             </Text>
                         </Box>
                         <HStack

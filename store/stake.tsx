@@ -4,9 +4,7 @@ import { BigNumber } from "ethers";
 import { atom } from "nanostores";
 import { useEffect, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-    stakeSuccessFn,
-} from "../component/stake-result-modal";
+import { stakeSuccessFn } from "../component/stake-result-modal";
 import {
     claim,
     getAllEarned,
