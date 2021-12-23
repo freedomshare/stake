@@ -4,12 +4,16 @@ export const stakeAddress = process.env.NEXT_PUBLIC_addressOfStake!;
 export const networkName = process.env
     .NEXT_PUBLIC_networkName as keyof typeof txUrlMap;
 
-export const ViewContractUrl =
-    "https://mumbai.polygonscan.com/address/0x562971D6b3496fA51CE8782BEd6d932BBc8AbaaF";
+export const chainExplorerMap = {
+    mumbai: "https://mumbai.polygonscan.com",
+    bsc: "https://bscscan.com",
+}
+
+export const ViewContractUrl = `${chainExplorerMap[networkName]}/address/${stakeAddress}`;
 
 export const txUrlMap = {
-    mumbai: "https://mumbai.polygonscan.com/tx",
-    bsc: "https://bscscan.com/tx",
+    mumbai: `${chainExplorerMap['mumbai']}/tx`,
+    bsc: `${chainExplorerMap['bsc']}/tx`,
 };
 
 // query all data by this stake address
