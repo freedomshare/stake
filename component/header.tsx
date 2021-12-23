@@ -15,8 +15,6 @@ import { useMeld } from "../store/stake";
 import { fromWei } from "web3-utils";
 import { MNumberFormat } from "./number-format";
 
-// const coinNum = "3k";
-// const dCoinNum = "153k";
 
 export const Header = () => {
     const addr = useStore(userAddressAtom);

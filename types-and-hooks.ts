@@ -635,7 +635,7 @@ export type StakesQueryVariables = Exact<{
 }>;
 
 
-export type StakesQuery = { __typename?: 'Query', stakes: Array<{ __typename?: 'Stake', id: string, staker: string, claimed: boolean, stakedAt: any, lastRecivedAt: any, expiredAt: any, stakePool: { __typename?: 'StakePool', id: string, ditaminLD: any, ditaminC: any, numberOfMELD: any, landC: any, vipname: string, stakeApyPercent: any, gameApyPercent: any, freezeTimeAtSeconds: any, totalVolume: any, salesCount: any } }> };
+export type StakesQuery = { __typename?: 'Query', stakes: Array<{ __typename?: 'Stake', id: string, staker: string, claimed: boolean, stakedAt: any, lastRecivedAt: any, expiredAt: any, txHash: any, stakePool: { __typename?: 'StakePool', id: string, ditaminLD: any, ditaminC: any, numberOfMELD: any, landC: any, vipname: string, stakeApyPercent: any, gameApyPercent: any, freezeTimeAtSeconds: any, totalVolume: any, salesCount: any } }> };
 
 
 export const MetaDocument = `
@@ -784,6 +784,7 @@ export const StakesDocument = `
     stakedAt
     lastRecivedAt
     expiredAt
+    txHash
     stakePool {
       id
       ditaminLD

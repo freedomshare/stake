@@ -17,11 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { Column, useTable, usePagination, useBlockLayout } from "react-table";
 import { MButton } from "./button";
-import React, {
-    useEffect,
-    useMemo,
-    useState,
-} from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { StakesQuery } from "../types-and-hooks";
 import { useStore } from "@nanostores/react";
 import { userAddressAtom } from "../store/address";
@@ -262,7 +258,6 @@ const tHeadList: Column<TColumn>[] = [
                         opacity={0.8}
                         _hover={{ opacity: 1 }}
                         href={`${txUrlMap[networkName!]}/${
-                            //@ts-ignore
                             cell.row.original.txHash
                         }`}
                         target={"_blank"}
