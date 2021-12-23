@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import ky from "ky";
 
 const apiUrl =
-    "https://api.coingecko.com/api/v3/simple/price?ids=meland-ai&vs_currencies=usd";
+    "/api/meld-price";
 
 /**
  * Get the price of the meld token in USD
