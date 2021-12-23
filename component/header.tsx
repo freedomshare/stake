@@ -79,36 +79,6 @@ export const Header = () => {
                     whitepaper
                 </Link>
                 <Link
-                    color="white"
-                    fontWeight={"extrabold"}
-                    fontSize={"13px"}
-                    textTransform={"uppercase"}
-                    href="https://meland.ai/#partnersi"
-                    target={"_blank"}
-                    rel="noopener noreferrer"
-                >
-                    partners
-                </Link>
-                {/* <Link
-                    fontWeight={"extrabold"}
-                    fontSize={"13px"}
-                    textTransform={"uppercase"}
-                    color="white"
-                >
-                    marketplace
-                </Link> */}
-                <Link
-                    color="white"
-                    fontWeight={"extrabold"}
-                    fontSize={"13px"}
-                    textTransform={"uppercase"}
-                    href="meland.ai"
-                    target={"_blank"}
-                    rel="noopener noreferrer"
-                >
-                    community
-                </Link>
-                <Link
                     fontWeight={"extrabold"}
                     fontSize={"13px"}
                     textTransform={"uppercase"}
