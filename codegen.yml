@@ -2,12 +2,18 @@
 schema: https://graphql-graph-node-mumbai.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake
 documents: "./graphql/*.graphql"
 generates:
-  types-and-hooks.ts:
-    plugins:
-      - typescript
-      - typescript-operations
-      - typescript-react-query
-    config:
-      fetcher:
-        # endpoint: "https://graphql-graph-node-bsc.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake"
-        endpoint: https://graphql-graph-node-mumbai.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake
+    types-and-hooks.ts:
+        plugins:
+            - add:
+                content: 
+                    - "/**
+                      \n* This file is generated automatically by `codegen.yml`.
+                      \n* Please do not modify it manually.
+                      \n*/"
+                    - "import { END_POINT } from './store/constant';"
+            - typescript
+            - typescript-operations
+            - typescript-react-query
+        config:
+            fetcher:
+                endpoint: "END_POINT"

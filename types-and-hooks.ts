@@ -1,3 +1,8 @@
+/** 
+* This file is generated automatically by `codegen.yml`. 
+* Please do not modify it manually. 
+*/
+import { END_POINT } from './store/constant';
 import { useQuery, UseQueryOptions } from 'react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -7,7 +12,7 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Mayb
 
 function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
   return async (): Promise<TData> => {
-    const res = await fetch("https://graphql-graph-node-mumbai.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake", {
+    const res = await fetch(END_POINT as string, {
     method: "POST",
       body: JSON.stringify({ query, variables }),
     });
