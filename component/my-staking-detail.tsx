@@ -318,7 +318,7 @@ const ClaimC = (p: IClaimProps) => {
                 isLoading={isLoading}
                 onClick={onClick}
             >
-                CLAIMx
+                CLAIM
             </MButton>
         </Center>
     );
