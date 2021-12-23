@@ -57,7 +57,7 @@ export const MyStakingAmountBox = () => {
                 mt={isStaked ? "19px" : "16px"}
             />
             {isStaked && <EarnedMELD />}
-            {/* <AccessLevel /> */}
+            <AccessLevel />
             <FourBox />
             {isStaked ? <GetMeldRow /> : <StakeButtonGroup />}
         </Flex>
@@ -174,12 +174,24 @@ const EarnedMELD = () => {
         </Center>
     );
 };
-const level = "free";
 const AccessLevel = () => {
+    const { data } = useGetCurrentStakedPoolsQuery();
+    const level = useMemo(() => {
+        if (data?.stakes.length) {
+            const arr = data?.stakes?.sort((a, b) =>
+                a.stakePool.stakeApyPercent - b.stakePool.stakeApyPercent > 0
+                    ? -1
+                    : 1
+            );
+            return arr[0].stakePool.vipname;
+        }
+        return "Free";
+    }, [data?.stakes]);
+
     return (
         <HStack spacing={"4px"} mb={"14px"}>
             <Image
-                src={`/images/${level}@2x.png`}
+                src={`/images/${level.toLowerCase()}@2x.png`}
                 width={30}
                 height={30}
                 alt={`${level} access`}
@@ -261,7 +273,6 @@ const InfoBox = ({ title, value, icon, unit }: Record<string, string>) => {
 
 const FourBox = React.memo(() => {
     const { data } = useLevelInfoQuery();
-    useGetCurrentStakedPoolsQuery();
 
     return (
         <Grid templateColumns={"repeat(4,1fr)"} gap={"10px"}>
