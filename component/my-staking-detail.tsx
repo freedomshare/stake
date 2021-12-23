@@ -304,7 +304,7 @@ const ClaimC = (p: IClaimProps) => {
     const { cell } = p.data;
     const { mutate, isLoading } = useClaimAction();
     const onClick = () => {
-        mutate(ethers.BigNumber.from(cell.row.original.id));
+        mutate(ethers.BigNumber.from(cell.row.original.stakePool.id));
     };
     return (
         <Center height={"100%"} width={"150px"}>
@@ -313,12 +313,12 @@ const ClaimC = (p: IClaimProps) => {
                 mScheme="yellow"
                 disabled={
                     cell.row.original.claimed ||
-                    cell.row.original.expiredAt < Date.now()
+                    !(cell.row.original.expiredAt < Date.now() / 1000)
                 }
                 isLoading={isLoading}
                 onClick={onClick}
             >
-                CLAIM
+                CLAIMx
             </MButton>
         </Center>
     );
