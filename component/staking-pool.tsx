@@ -28,47 +28,47 @@ const StakingPoolList: {
     field: keyof StakePoolsQuery["stakePools"][0] | typeof totalApy;
     unit?: string;
 }[] = [
-        {
-            img: "/images/apyhui_icon@2x.png",
-            title: "Max APY",
-            field: "totalApy",
-            unit: "",
-        },
-        {
-            img: "/images/occupationhuit_icon@2x.png",
-            title: "Occupied Land Limit",
-            info: "Occupied Land Limit",
-            field: "landC",
-            unit: "LANDS",
-        },
-        {
-            img: "/images/day_landhui_icon@2x.png",
-            title: "Ditamin/Land/Day",
-            field: "ditaminLD",
-            unit: "DITAMIN",
-        },
-        {
-            img: "/images/ditminchallengehui_icon@2x.png",
-            title: "Ditamin/Challenge",
-            info: "Ditamin/Challenge",
-            field: "ditaminC",
-            unit: "DITAMIN",
-        },
-        {
-            img: "/images/stakeamount_icon@2x.png",
-            title: "Stake Amount",
-            info: "Stake Amoun",
-            field: "numberOfMELD",
-            unit: "MELD",
-        },
-        {
-            img: "/images/stakeduration_icon@2x.png",
-            title: "Stake Duration",
-            info: "",
-            field: "freezeTimeAtSeconds",
-            unit: "DAYS",
-        },
-    ];
+    {
+        img: "/images/apyhui_icon@2x.png",
+        title: "Max APY",
+        field: "totalApy",
+        unit: "",
+    },
+    {
+        img: "/images/occupationhuit_icon@2x.png",
+        title: "Occupied Land Limit",
+        info: "Occupied Land Limit",
+        field: "landC",
+        unit: "LANDS",
+    },
+    {
+        img: "/images/day_landhui_icon@2x.png",
+        title: "Ditamin/Land/Day",
+        field: "ditaminLD",
+        unit: "DITAMIN",
+    },
+    {
+        img: "/images/ditminchallengehui_icon@2x.png",
+        title: "Ditamin/Challenge",
+        info: "Ditamin/Challenge",
+        field: "ditaminC",
+        unit: "DITAMIN",
+    },
+    {
+        img: "/images/stakeamount_icon@2x.png",
+        title: "Stake Amount",
+        info: "Stake Amoun",
+        field: "numberOfMELD",
+        unit: "MELD",
+    },
+    {
+        img: "/images/stakeduration_icon@2x.png",
+        title: "Stake Duration",
+        info: "",
+        field: "freezeTimeAtSeconds",
+        unit: "DAYS",
+    },
+];
 
 const StakingPoolLabel = () => {
     return (
@@ -185,24 +185,24 @@ const accessList: {
     key: TAccessClass;
     title: React.ReactNode;
 }[] = [
-        {
-            key: "free",
-            title: "Free access",
-        },
+    {
+        key: "free",
+        title: "Free access",
+    },
 
-        {
-            key: "silver",
-            title: "Silver access",
-        },
-        {
-            key: "gold",
-            title: "Gold access",
-        },
-        {
-            key: "platinum",
-            title: "Platinum access",
-        },
-    ];
+    {
+        key: "silver",
+        title: "Silver access",
+    },
+    {
+        key: "gold",
+        title: "Gold access",
+    },
+    {
+        key: "platinum",
+        title: "Platinum access",
+    },
+];
 
 interface IAccessListProps {
     title: React.ReactNode;
@@ -213,7 +213,7 @@ interface IAccessListProps {
 const AccessList = (p: IAccessListProps) => {
     const { title, field, data: originData = [], dataIndex } = p;
 
-    const { isLoading, mutate } = useMutation(stakeByPoolId);
+    const { isLoading, mutate, error } = useMutation(stakeByPoolId);
 
     const isSoldOut = useMemo(
         () =>
@@ -223,15 +223,12 @@ const AccessList = (p: IAccessListProps) => {
         [originData, dataIndex]
     );
 
-    const data = originData.map(rv => {
-        const extRv: { totalApy: string } & typeof rv = { totalApy: '', ...rv };
+    const data = originData.map((rv) => {
+        const extRv: { totalApy: string } & typeof rv = { totalApy: "", ...rv };
         extRv.numberOfMELD = MNumberFormat({ value: fromWei(rv.numberOfMELD) });
-        extRv.totalApy = Number(
-            rv.gameApyPercent
-        ) + Number(
-                rv.stakeApyPercent
-        ) + "%"
-        extRv.freezeTimeAtSeconds = rv.freezeTimeAtSeconds / (24 * 60 * 60)
+        extRv.totalApy =
+            Number(rv.gameApyPercent) + Number(rv.stakeApyPercent) + "%";
+        extRv.freezeTimeAtSeconds = rv.freezeTimeAtSeconds / (24 * 60 * 60);
         return extRv;
     });
 
@@ -248,39 +245,6 @@ const AccessList = (p: IAccessListProps) => {
             width={"208px"}
             rounded={"16px"}
             position={"relative"}
-            _before={{
-                content: `""`,
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                top: 0,
-                left: 0,
-                border: "2px solid rgba(245, 197, 42, .4)",
-                borderRadius: "16px",
-                pointerEvents: "none",
-                visibility: "hidden",
-            }}
-            _after={{
-                content: `""`,
-                position: "absolute",
-                width: "100%",
-                height: "70px",
-                top: 0,
-                left: 0,
-                borderRadius: "16px 16px 0px 0",
-                pointerEvents: "none",
-                visibility: "hidden",
-                backgroundColor: "rgba(245, 197, 42, 1)",
-                opacity: 0.4,
-            }}
-            _hover={{
-                _before: {
-                    visibility: "visible",
-                },
-                _after: {
-                    visibility: "visible",
-                },
-            }}
         >
             <Center height={"68px"}>
                 <Image
@@ -353,14 +317,13 @@ const AccessList = (p: IAccessListProps) => {
                     </VStack>
                 </Center>
             ))}
-            <Center hidden={field === 'free'} height={"84px"}>
+            <Center hidden={field === "free"} height={"84px"}>
                 <MButton
                     variant={"outline"}
                     mScheme={isSoldOut ? "white" : "yellow"}
                     onClick={stakeFn}
                     isLoading={isLoading}
                     isDisabled={isSoldOut}
-
                 >
                     {isSoldOut ? "Sold Out" : "Stake"}
                 </MButton>
