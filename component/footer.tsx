@@ -39,7 +39,7 @@ export const Footer = () => {
                             fontWeight={"League Spartan"}
                             fontSize={"13px"}
                         >
-                            © 2021 BCM Innovation Ltd.
+                            © 2021 The MELAND TECHNOLOGY LIMITED.
                         </Text>
                     </HStack>
 
