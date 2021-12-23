@@ -16,8 +16,11 @@ import { useMutation } from "react-query";
 import { stakeByPoolId } from "../store/stake";
 import { BigNumber } from "bignumber.js";
 import React, { useCallback, useMemo } from "react";
+import { MNumberFormat } from "./number-format";
+import { fromWei } from "web3-utils";
 
 const totalApy = "totalApy" as const;
+const numberOfMELD = "numberOfMELD" as const;
 const StakingPoolList: {
     img: string;
     title: string;
@@ -55,7 +58,7 @@ const StakingPoolList: {
         img: "/images/stakeamount_icon@2x.png",
         title: "Stake Amount",
         info: "Stake Amoun",
-        field: "salesCount",
+        field: "numberOfMELD",
         unit: "MELD",
     },
     {
@@ -214,8 +217,8 @@ const AccessList = (p: IAccessListProps) => {
 
     const isSoldOut = useMemo(
         () =>
-            new BigNumber(data?.[dataIndex]?.totalVolume || 1).lt(
-                new BigNumber(data?.[dataIndex]?.salesCount || 1)
+            new BigNumber(data?.[dataIndex]?.totalVolume || 0).lte(
+                new BigNumber(data?.[dataIndex]?.salesCount || 0)
             ),
         [data, dataIndex]
     );
@@ -315,7 +318,7 @@ const AccessList = (p: IAccessListProps) => {
                                               data?.[dataIndex]?.stakeApyPercent
                                           ) +
                                           "%"
-                                        : data?.[dataIndex]?.[item.field] 
+                                        : (item.field === numberOfMELD ? MNumberFormat({ value: fromWei(data?.[dataIndex]?.[item.field]) }) : data?.[dataIndex]?.[item.field])
                                 }
                                 unit={item.unit}
                                 textSize={"16px"}
