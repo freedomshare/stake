@@ -66,7 +66,7 @@ export const TotalStakingBox = () => {
             )}
 
             <Text color="#537E7E" mt={"23px"} fontSize={12} fontWeight={"bold"}>
-                Total Value
+                TVL
             </Text>
             {isLoading ? (
                 <Spinner color={"white"} />

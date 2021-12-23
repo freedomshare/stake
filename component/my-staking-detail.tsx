@@ -148,7 +148,7 @@ const tHeadList: Column<TColumn>[] = [
 
     {
         width: 150,
-        Header: <THeadTitle textAlign={"center"}>Status</THeadTitle>,
+        Header: <THeadTitle textAlign={"center"}>State</THeadTitle>,
         accessor: "id",
         Cell: ({ cell }) => (
             <Center height={"100%"}>
