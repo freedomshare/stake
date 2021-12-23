@@ -159,8 +159,7 @@ export const useBlockIndexIsSuccess = ({
     const toast = useToast();
     const queryClient = useQueryClient();
 
-    //@ts-ignore
-    return useMetaQuery(blockNumber, {
+    return useMetaQuery(undefined, {
         enabled: !!blockNumber,
         refetchInterval: (data) => {
             if (
