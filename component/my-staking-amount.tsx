@@ -32,6 +32,18 @@ import { scrollToMyStakingDetail } from "./my-staking-detail";
 export const MyStakingAmountBox = () => {
     useStakes();
     const isStaked = useStore(isStakedAtom);
+    const { data } = useGetCurrentStakedPoolsQuery();
+    const level = useMemo(() => {
+        if (data?.stakes.length) {
+            const arr = data?.stakes?.sort((a, b) =>
+                a.stakePool.stakeApyPercent - b.stakePool.stakeApyPercent > 0
+                    ? -1
+                    : 1
+            );
+            return arr[0].stakePool.vipname;
+        }
+        return "Free";
+    }, [data?.stakes]);
 
     return (
         <Flex
@@ -43,7 +55,7 @@ export const MyStakingAmountBox = () => {
             padding={isStaked ? "32px 34px 26px 30px" : "28px 28px 28px 30px"}
             bg={"#0A4747"}
             rounded={"18px"}
-            backgroundImage={"url(/images/amountbg@2x.png)"}
+            backgroundImage={`url(/images/${level.toLowerCase()}-bg.png)`}
             backgroundRepeat={"no-repeat"}
             backgroundSize={"100%"}
             backgroundPosition={"bottom"}
@@ -57,7 +69,7 @@ export const MyStakingAmountBox = () => {
                 mt={isStaked ? "19px" : "16px"}
             />
             {isStaked && <EarnedMELD />}
-            <AccessLevel />
+            <AccessLevel level={level} />
             <FourBox />
             {isStaked ? <GetMeldRow /> : <StakeButtonGroup />}
         </Flex>
@@ -174,20 +186,7 @@ const EarnedMELD = () => {
         </Center>
     );
 };
-const AccessLevel = () => {
-    const { data } = useGetCurrentStakedPoolsQuery();
-    const level = useMemo(() => {
-        if (data?.stakes.length) {
-            const arr = data?.stakes?.sort((a, b) =>
-                a.stakePool.stakeApyPercent - b.stakePool.stakeApyPercent > 0
-                    ? -1
-                    : 1
-            );
-            return arr[0].stakePool.vipname;
-        }
-        return "Free";
-    }, [data?.stakes]);
-
+const AccessLevel = ({ level }: { level: string }) => {
     return (
         <HStack spacing={"4px"} mb={"14px"}>
             <Image
