@@ -15,7 +15,13 @@ import {
     HStack,
     TextProps,
 } from "@chakra-ui/react";
-import { Column, useTable, usePagination, useBlockLayout } from "react-table";
+import {
+    Column,
+    useTable,
+    usePagination,
+    useBlockLayout,
+    CellProps,
+} from "react-table";
 import { MButton } from "./button";
 import React, { useEffect, useMemo, useState } from "react";
 import { StakesQuery } from "../types-and-hooks";
@@ -23,8 +29,12 @@ import { useStore } from "@nanostores/react";
 import { userAddressAtom } from "../store/address";
 import { fromWei } from "web3-utils";
 import format from "date-fns/format";
-import { BigNumber } from "ethers";
-import { useStakes, useTotalStakeMetaData } from "../store/stake";
+import { BigNumber, ethers } from "ethers";
+import {
+    useClaimAction,
+    useStakes,
+    useTotalStakeMetaData,
+} from "../store/stake";
 import { MNumberFormat } from "./number-format";
 import { networkName, PAGE_SIZE, txUrlMap } from "../store/constant";
 
@@ -107,7 +117,12 @@ const totalRevenue = (
 };
 
 const THeadTitle = (p: TextProps) => (
-    <Text color={"rgba(255,255,255,.3)"} fontSize={12} {...p} />
+    <Text
+        color={"rgba(255,255,255,.3)"}
+        textAlign={"center"}
+        fontSize={12}
+        {...p}
+    />
 );
 type TColumn = StakesQuery["stakes"][0] & {
     $icon?: string;
@@ -116,7 +131,7 @@ type TColumn = StakesQuery["stakes"][0] & {
 };
 const tHeadList: Column<TColumn>[] = [
     {
-        width: 137,
+        width: 129,
         Header: "",
         Cell: () => (
             <Center height={"100%"}>
@@ -132,7 +147,7 @@ const tHeadList: Column<TColumn>[] = [
     },
 
     {
-        width: 104,
+        width: 150,
         Header: <THeadTitle textAlign={"center"}>Status</THeadTitle>,
         accessor: "id",
         Cell: ({ cell }) => (
@@ -150,17 +165,16 @@ const tHeadList: Column<TColumn>[] = [
         ),
     },
     {
-        width: 230,
-        Header: <THeadTitle pl={"50px"}>Staking amount</THeadTitle>,
+        width: 150,
+        Header: <THeadTitle>Staking amount</THeadTitle>,
         accessor: "stakePool",
         Cell: ({ cell }) => {
             return (
-                <HStack
+                <Center
                     height={"100%"}
                     color={"white"}
                     fontSize={"13px"}
                     fontWeight={"bold"}
-                    ml={"50px"}
                 >
                     <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
                         {fromWei(
@@ -170,50 +184,50 @@ const tHeadList: Column<TColumn>[] = [
                             /MELD
                         </Text>
                     </Text>
-                </HStack>
+                </Center>
             );
         },
     },
     {
-        width: 74 + 67,
+        width: 150,
 
-        Header: <THeadTitle pl={"6px"}>Begin time</THeadTitle>,
+        Header: <THeadTitle>Begin time</THeadTitle>,
         accessor: "stakedAt",
         Cell: ({ cell }) => {
             return (
-                <HStack height={"100%"}>
+                <Center height={"100%"}>
                     <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
                         {format(
                             new Date(cell.row.original?.stakedAt * 1000),
                             "dd/MM/yyyy"
                         )}
                     </Text>
-                </HStack>
+                </Center>
             );
         },
     },
     {
-        width: 74 + 68,
+        width: 150,
 
-        Header: <THeadTitle pl={"9px"}>End time</THeadTitle>,
+        Header: <THeadTitle>End time</THeadTitle>,
         accessor: "expiredAt",
         Cell: ({ cell }) => {
             return (
-                <HStack height={"100%"}>
+                <Center height={"100%"}>
                     <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
                         {format(
                             new Date(cell.row.original?.expiredAt * 1000),
                             "dd/MM/yyyy"
                         )}
                     </Text>
-                </HStack>
+                </Center>
             );
         },
     },
     {
-        width: 86 + 78,
+        width: 150,
 
-        Header: <THeadTitle pl={"4px"}>Total revenue</THeadTitle>,
+        Header: <THeadTitle>Total revenue</THeadTitle>,
         accessor: "lastRecivedAt",
         Cell: ({ cell }) => {
             const {
@@ -227,7 +241,7 @@ const tHeadList: Column<TColumn>[] = [
                 },
             } = cell.row.original;
             return (
-                <HStack height={"100%"}>
+                <Center height={"100%"}>
                     <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
                         <MNumberFormat
                             value={totalRevenue(
@@ -241,20 +255,19 @@ const tHeadList: Column<TColumn>[] = [
                             /MELD
                         </Text>
                     </Text>
-                </HStack>
+                </Center>
             );
         },
     },
     {
-        width: 64,
+        width: 100,
         Header: <THeadTitle>view TX</THeadTitle>,
         accessor: "$viewTx",
         Cell: ({ cell }) => {
             return (
-                <HStack height={"100%"}>
+                <Center height={"100%"}>
                     <Box
                         as="a"
-                        ml={"18px"}
                         opacity={0.8}
                         _hover={{ opacity: 1 }}
                         href={`${txUrlMap[networkName!]}/${
@@ -270,37 +283,46 @@ const tHeadList: Column<TColumn>[] = [
                             alt="link"
                         />
                     </Box>
-                </HStack>
+                </Center>
             );
         },
     },
     {
-        width: 173,
-        Header: (
-            <Box pl={"72px"}>
-                <THeadTitle>Claim</THeadTitle>
-            </Box>
-        ),
-        Cell: ({ cell }) => {
-            return (
-                <HStack height={"100%"} pl={"33px"}>
-                    <MButton
-                        variant={"outline"}
-                        mScheme="yellow"
-                        disabled={
-                            cell.row.original.claimed ||
-                            cell.row.original.expiredAt < Date.now()
-                        }
-                        // onClick={() => {
-                    >
-                        CLAIM
-                    </MButton>
-                </HStack>
-            );
+        width: 150 + 26,
+        Header: <THeadTitle width={"150px"}>Claim</THeadTitle>,
+        Cell: (p) => {
+            return <ClaimC data={p} />;
         },
         accessor: "$claim",
     },
 ];
+
+interface IClaimProps {
+    data: React.PropsWithChildren<CellProps<TColumn, string | undefined>>;
+}
+const ClaimC = (p: IClaimProps) => {
+    const { cell } = p.data;
+    const { mutate, isLoading } = useClaimAction();
+    const onClick = () => {
+        mutate(ethers.BigNumber.from(cell.row.original.id));
+    };
+    return (
+        <Center height={"100%"} width={"150px"}>
+            <MButton
+                variant={"outline"}
+                mScheme="yellow"
+                disabled={
+                    cell.row.original.claimed ||
+                    cell.row.original.expiredAt < Date.now()
+                }
+                isLoading={isLoading}
+                onClick={onClick}
+            >
+                CLAIM
+            </MButton>
+        </Center>
+    );
+};
 
 const MyStakingDetailTable = () => {
     const userAddr = useStore(userAddressAtom);

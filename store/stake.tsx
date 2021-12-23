@@ -27,7 +27,7 @@ import { meldAddress, PAGE_SIZE, stakeAddress, staker } from "./constant";
 
 export const isStakedAtom = atom(false);
 
-export const currentPoolsIdAtom = atom<string[]>();
+export const currentPoolsIdAtom = atom<string[]>([]);
 
 export const stakedArrAtom = atom<string[]>([]);
 
@@ -143,6 +143,8 @@ const allQueriesKey = [
     "levelInfo",
 ];
 
+let hasCompleted: Record<string, boolean> = {};
+
 /**
  * 执行操作后得到 blockNumber ，根据 blockNumber 查询当前操作是非完成，
  * @param param0
@@ -159,9 +161,13 @@ export const useBlockIndexIsSuccess = ({
     const toast = useToast();
     const queryClient = useQueryClient();
 
+    //@ts-ignore
     return useMetaQuery(undefined, {
-        enabled: !!blockNumber,
+        enabled: !!blockNumber && !hasCompleted[blockNumber + ""],
         refetchInterval: (data) => {
+            if (blockNumber && hasCompleted[blockNumber + ""]) {
+                return false;
+            }
             if (
                 blockNumber &&
                 data?._meta?.block?.number &&
@@ -175,6 +181,7 @@ export const useBlockIndexIsSuccess = ({
                         isClosable: true,
                         ...toastOption,
                     });
+                hasCompleted[blockNumber + ""] = true;
                 allQueriesKey.forEach((key) =>
                     queryClient.invalidateQueries(key)
                 );
@@ -191,6 +198,7 @@ export const useBlockIndexIsSuccess = ({
  */
 export const useStakePoolAction = () => {
     const mutation = useMutation(stakeByPoolId);
+
     const query = useBlockIndexIsSuccess({
         blockNumber: mutation?.data?.blockNumber,
     });

@@ -261,6 +261,7 @@ const InfoBox = ({ title, value, icon, unit }: Record<string, string>) => {
 
 const FourBox = React.memo(() => {
     const { data } = useLevelInfoQuery();
+    useGetCurrentStakedPoolsQuery();
 
     return (
         <Grid templateColumns={"repeat(4,1fr)"} gap={"10px"}>

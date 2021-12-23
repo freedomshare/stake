@@ -9,6 +9,7 @@ import { StakingPool } from "../component/staking-pool";
 import { NotConnectWalletBox } from "../component/unconnect-wallet-box";
 import { useStore } from "@nanostores/react";
 import { connectWallet, userAddressAtom } from "../store/address";
+import { isStakedAtom } from "../store/stake";
 
 const Home: NextPage<{
     networkName: string;
@@ -16,6 +17,7 @@ const Home: NextPage<{
     addressOfStake: string;
 }> = (props) => {
     const addr = useStore(userAddressAtom);
+    const isStaked = useStore(isStakedAtom);
 
     // useLayoutEffect(() => {
     //     connectWallet();
@@ -23,12 +25,12 @@ const Home: NextPage<{
     useEffect(() => {
         if (window.ethereum) {
             // @ts-ignore
-            window.ethereum.on('accountsChanged', (accounts) => {
+            window.ethereum.on("accountsChanged", (accounts) => {
                 connectWallet();
             });
             // @ts-ignore
-            window.ethereum.on('chainChanged', (accounts) => {
-                // 
+            window.ethereum.on("chainChanged", (accounts) => {
+                //
             });
         }
     }, []);
@@ -49,7 +51,7 @@ const Home: NextPage<{
                 )}
                 <TotalStakingBox />
             </HStack>
-            {addr && <MyStakingDetail />}
+            {addr && isStaked && <MyStakingDetail />}
             <StakingPool />
         </VStack>
     );
