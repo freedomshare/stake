@@ -89,14 +89,14 @@ export const Header = () => {
                 >
                     partners
                 </Link>
-                <Link
+                {/* <Link
                     fontWeight={"extrabold"}
                     fontSize={"13px"}
                     textTransform={"uppercase"}
                     color="white"
                 >
                     marketplace
-                </Link>
+                </Link> */}
                 <Link
                     color="white"
                     fontWeight={"extrabold"}
