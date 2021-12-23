@@ -3,13 +3,11 @@ import { getWeb3Provider, switchToNetwork } from "../lib/web3";
 
 export const userAddressAtom = atom<string>("");
 
-
 export const setUserAddress = (address: string) => {
     userAddressAtom.set(address);
 };
 
 const networkName = process.env.NEXT_PUBLIC_networkName;
-
 
 export const connectWallet = async () => {
     const provider = await getWeb3Provider();

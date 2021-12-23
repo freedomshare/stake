@@ -5,12 +5,11 @@ import {
     Flex,
     Tooltip,
     Center,
-    Button,
     VStack,
     HStack,
 } from "@chakra-ui/react";
 import { UnitText } from "./info-box";
-import { colorSchemeList, MButton } from "./button";
+import { MButton } from "./button";
 import { StakePoolsQuery, useStakePoolsQuery } from "../types-and-hooks";
 import { useMutation } from "react-query";
 import { stakeByPoolId } from "../store/stake";
@@ -31,7 +30,7 @@ const StakingPoolList: {
     {
         img: "/images/apyhui_icon@2x.png",
         title: "Max APY",
-        field: "totalApy",
+        field: totalApy,
         unit: "",
     },
     {
@@ -58,7 +57,7 @@ const StakingPoolList: {
         img: "/images/stakeamount_icon@2x.png",
         title: "Stake Amount",
         info: "Stake Amoun",
-        field: "numberOfMELD",
+        field: numberOfMELD,
         unit: "MELD",
     },
     {
@@ -213,7 +212,7 @@ interface IAccessListProps {
 const AccessList = (p: IAccessListProps) => {
     const { title, field, data: originData = [], dataIndex } = p;
 
-    const { isLoading, mutate, error } = useMutation(stakeByPoolId);
+    const { isLoading, mutate } = useMutation(stakeByPoolId);
 
     const isSoldOut = useMemo(
         () =>

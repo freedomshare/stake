@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Box, Center, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Center, Text, VStack } from "@chakra-ui/react";
 import { MButton } from "./button";
 
 export const NotConnectWalletBox = (props: {
@@ -48,6 +48,7 @@ export const NotConnectWalletBox = (props: {
                     fontSize={"14px"}
                     height={"38px"}
                     width={"151px"}
+                    // fontWeight={"extrabold"}
                 >
                     Connect wallet
                 </MButton>
