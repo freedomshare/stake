@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { HStack, VStack } from "@chakra-ui/react";
-
+import Head from 'next/head';
 import React, { useEffect } from "react";
 import { MyStakingAmountBox } from "../component/my-staking-amount";
 import { TotalStakingBox } from "../component/total-staking";
@@ -37,25 +37,33 @@ const Home: NextPage<{
     }, []);
 
     return (
-        <VStack
-            minWidth={"1200px"}
-            spacing={"30px"}
-            bg={"#125354"}
-            pt={"43px"}
-            pb={"54px"}
-        >
-            <StakeModal />
-            <HStack spacing={"20px"} alignItems={"flex-start"}>
-                {addr ? (
-                    <MyStakingAmountBox />
-                ) : (
-                    <NotConnectWalletBox onClickConnect={connectWallet} />
-                )}
-                <TotalStakingBox />
-            </HStack>
-            {addr && isStaked && <MyStakingDetail />}
-            <StakingPool />
-        </VStack>
+        <>
+            <Head>
+                <title>Meland.ai(MELD) stake</title>
+                <meta name="description" content="Meland.ai stake" />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
+
+            <VStack
+                minWidth={"1200px"}
+                spacing={"30px"}
+                bg={"#125354"}
+                pt={"43px"}
+                pb={"54px"}
+            >
+                <StakeModal />
+                <HStack spacing={"20px"} alignItems={"flex-start"}>
+                    {addr ? (
+                        <MyStakingAmountBox />
+                    ) : (
+                        <NotConnectWalletBox onClickConnect={connectWallet} />
+                    )}
+                    <TotalStakingBox />
+                </HStack>
+                {addr && isStaked && <MyStakingDetail />}
+                <StakingPool />
+            </VStack>
+        </>
     );
 };
 
