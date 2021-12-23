@@ -61,7 +61,7 @@ export const scrollToMyStakingDetail = () => {
 export const MyStakingDetail = () => (
     <Box className={myStakingDetailClassName}>
         <Text color={"white"} fontWeight={"bold"} fontSize={"18px"} mb={"14px"}>
-            My staking detail
+            My Staking Detail
         </Text>
 
         <Box
@@ -121,6 +121,7 @@ const THeadTitle = (p: TextProps) => (
         color={"rgba(255,255,255,.3)"}
         textAlign={"center"}
         fontSize={12}
+        textTransform={"capitalize"}
         {...p}
     />
 );
@@ -166,7 +167,7 @@ const tHeadList: Column<TColumn>[] = [
     },
     {
         width: 150,
-        Header: <THeadTitle>Staking amount</THeadTitle>,
+        Header: <THeadTitle>Staking Amount</THeadTitle>,
         accessor: "stakePool",
         Cell: ({ cell }) => {
             return (
@@ -191,7 +192,7 @@ const tHeadList: Column<TColumn>[] = [
     {
         width: 150,
 
-        Header: <THeadTitle>Begin time</THeadTitle>,
+        Header: <THeadTitle>Begin Time</THeadTitle>,
         accessor: "stakedAt",
         Cell: ({ cell }) => {
             return (
@@ -209,7 +210,7 @@ const tHeadList: Column<TColumn>[] = [
     {
         width: 150,
 
-        Header: <THeadTitle>End time</THeadTitle>,
+        Header: <THeadTitle>End Time</THeadTitle>,
         accessor: "expiredAt",
         Cell: ({ cell }) => {
             return (
@@ -227,7 +228,7 @@ const tHeadList: Column<TColumn>[] = [
     {
         width: 150,
 
-        Header: <THeadTitle>Total revenue</THeadTitle>,
+        Header: <THeadTitle>Total Revenue</THeadTitle>,
         accessor: "lastRecivedAt",
         Cell: ({ cell }) => {
             const {
@@ -261,7 +262,7 @@ const tHeadList: Column<TColumn>[] = [
     },
     {
         width: 100,
-        Header: <THeadTitle>view TX</THeadTitle>,
+        Header: <THeadTitle>View TX</THeadTitle>,
         accessor: "$viewTx",
         Cell: ({ cell }) => {
             return (
@@ -318,7 +319,7 @@ const ClaimC = (p: IClaimProps) => {
                 isLoading={isLoading}
                 onClick={onClick}
             >
-                CLAIM
+                Claim
             </MButton>
         </Center>
     );
@@ -558,7 +559,7 @@ const Status = (p: IStatusProps) => {
                 color={statusMapping[status].color}
                 fontSize={"13px"}
                 fontWeight={"bold"}
-                textTransform={"uppercase"}
+                textTransform={"capitalize"}
                 ml={"2px"}
             >
                 {status}

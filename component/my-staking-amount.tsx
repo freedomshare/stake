@@ -219,7 +219,7 @@ const userLevelInfo = ({ apy = "--", ol = "--", ddl = "--", dc = "--" }) => [
         title: "Occupied Land Limit",
         value: ol,
         icon: "/images/61@2x.png",
-        unit: "LANDS",
+        unit: "LAND",
         info: "",
     },
     {

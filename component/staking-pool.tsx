@@ -66,7 +66,7 @@ const StakingPoolList: {
         title: "Stake Amount",
         info: "",
         field: numberOfMELD,
-        unit: "Meld",
+        unit: "MELD",
     },
     {
         img: "/images/stakeduration_icon@2x.png",
@@ -385,7 +385,7 @@ export const StakingPool = () => {
                 fontWeight={"bold"}
                 mb={"14px"}
             >
-                Staking pool
+                Staking Pool
             </Text>
             <Box
                 width={1200}
