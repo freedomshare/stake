@@ -28,47 +28,47 @@ const StakingPoolList: {
     field: keyof StakePoolsQuery["stakePools"][0] | typeof totalApy;
     unit?: string;
 }[] = [
-    {
-        img: "/images/apyhui_icon@2x.png",
-        title: "Max APY",
-        field: "totalApy",
-        unit: "",
-    },
-    {
-        img: "/images/occupationhuit_icon@2x.png",
-        title: "Occupied Land Limit",
-        info: "Occupied Land Limit",
-        field: "landC",
-        unit: "LANDS",
-    },
-    {
-        img: "/images/day_landhui_icon@2x.png",
-        title: "Ditamin/Land/Day",
-        field: "ditaminLD",
-        unit: "DITAMIN",
-    },
-    {
-        img: "/images/ditminchallengehui_icon@2x.png",
-        title: "Ditamin/Challenge",
-        info: "Ditamin/Challenge",
-        field: "ditaminC",
-        unit: "DITAMIN",
-    },
-    {
-        img: "/images/stakeamount_icon@2x.png",
-        title: "Stake Amount",
-        info: "Stake Amoun",
-        field: "numberOfMELD",
-        unit: "MELD",
-    },
-    {
-        img: "/images/stakeduration_icon@2x.png",
-        title: "Stake Duration",
-        info: "",
-        field: "freezeTimeAtSeconds",
-        unit: "DAYS",
-    },
-];
+        {
+            img: "/images/apyhui_icon@2x.png",
+            title: "Max APY",
+            field: "totalApy",
+            unit: "",
+        },
+        {
+            img: "/images/occupationhuit_icon@2x.png",
+            title: "Occupied Land Limit",
+            info: "Occupied Land Limit",
+            field: "landC",
+            unit: "LANDS",
+        },
+        {
+            img: "/images/day_landhui_icon@2x.png",
+            title: "Ditamin/Land/Day",
+            field: "ditaminLD",
+            unit: "DITAMIN",
+        },
+        {
+            img: "/images/ditminchallengehui_icon@2x.png",
+            title: "Ditamin/Challenge",
+            info: "Ditamin/Challenge",
+            field: "ditaminC",
+            unit: "DITAMIN",
+        },
+        {
+            img: "/images/stakeamount_icon@2x.png",
+            title: "Stake Amount",
+            info: "Stake Amoun",
+            field: "numberOfMELD",
+            unit: "MELD",
+        },
+        {
+            img: "/images/stakeduration_icon@2x.png",
+            title: "Stake Duration",
+            info: "",
+            field: "freezeTimeAtSeconds",
+            unit: "DAYS",
+        },
+    ];
 
 const StakingPoolLabel = () => {
     return (
@@ -185,24 +185,24 @@ const accessList: {
     key: TAccessClass;
     title: React.ReactNode;
 }[] = [
-    {
-        key: "free",
-        title: "Free access",
-    },
+        {
+            key: "free",
+            title: "Free access",
+        },
 
-    {
-        key: "silver",
-        title: "Silver access",
-    },
-    {
-        key: "gold",
-        title: "Gold access",
-    },
-    {
-        key: "platinum",
-        title: "Platinum access",
-    },
-];
+        {
+            key: "silver",
+            title: "Silver access",
+        },
+        {
+            key: "gold",
+            title: "Gold access",
+        },
+        {
+            key: "platinum",
+            title: "Platinum access",
+        },
+    ];
 
 interface IAccessListProps {
     title: React.ReactNode;
@@ -211,17 +211,29 @@ interface IAccessListProps {
     dataIndex: number;
 }
 const AccessList = (p: IAccessListProps) => {
-    const { title, field, data = [], dataIndex } = p;
+    const { title, field, data: originData = [], dataIndex } = p;
 
     const { isLoading, mutate } = useMutation(stakeByPoolId);
 
     const isSoldOut = useMemo(
         () =>
-            new BigNumber(data?.[dataIndex]?.totalVolume || 0).lte(
-                new BigNumber(data?.[dataIndex]?.salesCount || 0)
+            new BigNumber(originData?.[dataIndex]?.totalVolume || 0).lte(
+                new BigNumber(originData?.[dataIndex]?.salesCount || 0)
             ),
-        [data, dataIndex]
+        [originData, dataIndex]
     );
+
+    const data = originData.map(rv => {
+        const extRv: { totalApy: string } & typeof rv = { totalApy: '', ...rv };
+        extRv.numberOfMELD = MNumberFormat({ value: fromWei(rv.numberOfMELD) });
+        extRv.totalApy = Number(
+            rv.gameApyPercent
+        ) + Number(
+                rv.stakeApyPercent
+        ) + "%"
+        extRv.freezeTimeAtSeconds = rv.freezeTimeAtSeconds / (24 * 60 * 60)
+        return extRv;
+    });
 
     const stakeFn = useCallback(() => {
         const stakePoolId = data?.[dataIndex]?.id;
@@ -309,17 +321,7 @@ const AccessList = (p: IAccessListProps) => {
                     >
                         <Box>
                             <UnitText
-                                text={
-                                    item.field === totalApy
-                                        ? Number(
-                                              data?.[dataIndex]?.gameApyPercent
-                                          ) +
-                                          Number(
-                                              data?.[dataIndex]?.stakeApyPercent
-                                          ) +
-                                          "%"
-                                        : (item.field === numberOfMELD ? MNumberFormat({ value: fromWei(data?.[dataIndex]?.[item.field]) }) : data?.[dataIndex]?.[item.field])
-                                }
+                                text={data?.[dataIndex]?.[item.field]}
                                 unit={item.unit}
                                 textSize={"16px"}
                                 unitTextSize={"12px"}
