@@ -5,9 +5,9 @@ import { useMemo } from "react";
 import { fromWei } from "web3-utils";
 import { BigNumber } from "bignumber.js";
 import { MNumberFormat } from "./number-format";
-import { staker } from "../store/constant";
 import { useTotalStakeMetaData } from "../store/stake";
-const ViewContractUrl = "https://mumbai.polygonscan.com/address/0x562971D6b3496fA51CE8782BEd6d932BBc8AbaaF";
+import { ViewContractUrl } from "../store/constant";
+
 
 export const TotalStakingBox = () => {
     const { isLoading: prizeLoading, data } = useGetMeldPrice();
@@ -38,7 +38,7 @@ export const TotalStakingBox = () => {
             width={"450px"}
             height={"394px"}
             flexDirection={"column"}
-            padding={"35px 0 37px 30px"}
+            padding={"40px 0 28px 30px"}
             bg={"#0A4747"}
             rounded={"18px"}
             backgroundImage={"url(/images/total_staking_BG@2x.png)"}
@@ -47,7 +47,7 @@ export const TotalStakingBox = () => {
             backgroundPosition={"bottom"}
         >
             <Text color="#537E7E" fontSize={14} fontWeight={"bold"}>
-                Total staked
+                Total Staked
             </Text>
             {isLoading ? (
                 <Spinner color="#F5C52A" />
@@ -66,7 +66,7 @@ export const TotalStakingBox = () => {
             )}
 
             <Text color="#537E7E" mt={"23px"} fontSize={12} fontWeight={"bold"}>
-                Total value
+                Total Value
             </Text>
             {isLoading ? (
                 <Spinner color={"white"} />
@@ -88,35 +88,6 @@ export const TotalStakingBox = () => {
                     </Text>
                 </Text>
             )}
-            {/* <Flex mt={"62px"}>
-        <BoxInfo
-          placement={"right"}
-          title="Total Supply"
-          value={totalSupply}
-          unit="MELD"
-          info={totalSupplyInfo}
-          flexDirection={"column"}
-          p={"16px"}
-          rounded={"10px"}
-          bg="#205858"
-          width={"192px"}
-          height={"72px"}
-          mr={25}
-        />
-        <BoxInfo
-          placement={"right"}
-          title="Circulating Supply"
-          value={circulatingSupply}
-          unit="MELD"
-          info={circulatingSupplyInfo}
-          flexDirection={"column"}
-          p={"16px"}
-          rounded={"10px"}
-          bg="#205858"
-          width={"192px"}
-          height={"72px"}
-        />
-      </Flex> */}
             <Flex
                 alignItems={"center"}
                 mt={"auto"}
@@ -131,7 +102,7 @@ export const TotalStakingBox = () => {
                     fontWeight={"bold"}
                     mr={"6px"}
                 >
-                    View contract
+                    View Stake Contract
                 </Text>
                 <Box as={"span"} transform={"rotate(-90deg)"}>
                     <Image
