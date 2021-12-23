@@ -332,7 +332,7 @@ const AccessList = (p: IAccessListProps) => {
 };
 
 export const StakingPool = () => {
-    const { data } = useStakePoolsQuery();
+    const { data } = useStakePoolsQuery({ first: 4, skip: 0 });
     return (
         <Box className={StakingPoolClassName}>
             <Text

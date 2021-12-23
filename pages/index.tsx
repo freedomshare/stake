@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import { HStack, VStack } from "@chakra-ui/react";
 
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect } from "react";
 import { MyStakingAmountBox } from "../component/my-staking-amount";
 import { TotalStakingBox } from "../component/total-staking";
 import { MyStakingDetail } from "../component/my-staking-detail";
@@ -20,6 +20,18 @@ const Home: NextPage<{
     // useLayoutEffect(() => {
     //     connectWallet();
     // }, []);
+    useEffect(() => {
+        if (window.ethereum) {
+            // @ts-ignore
+            window.ethereum.on('accountsChanged', (accounts) => {
+                connectWallet();
+            });
+            // @ts-ignore
+            window.ethereum.on('chainChanged', (accounts) => {
+                // 
+            });
+        }
+    }, []);
 
     return (
         <VStack

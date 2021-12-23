@@ -17,5 +17,5 @@ export const connectWallet = async () => {
     }
     await switchToNetwork(provider, networkName!);
     const accounts = await provider.listAccounts();
-    await setUserAddress(accounts[0].toLowerCase());
+    setUserAddress(accounts[0].toLowerCase());
 };
