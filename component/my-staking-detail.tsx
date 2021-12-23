@@ -101,9 +101,11 @@ const totalRevenue = (
     if (min.lt(max)) {
         max = min;
     }
+    const s = max.sub(start);
+    // Get math floor hours
+    const hs = BigNumber.from(Math.floor(s.div(3600).toNumber()) * 3600);
     return fromWei(
-        max
-            .sub(start)
+        hs
             .mul(numberOfMELDBig)
             .mul(stakeApyPercentBig)
             // .div(freezeTime)
@@ -346,14 +348,14 @@ const MyStakingDetailTable = () => {
         >
             <Table {...getTableProps()}>
                 <Thead>
-                    {headerGroups.map((headerGroup) => (
-                        <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
-                            {headerGroup.headers.map((column) => (
+                    {headerGroups.map((headerGroup, i) => (
+                        <Tr {...headerGroup.getHeaderGroupProps()} key={i}>
+                            {headerGroup.headers.map((column, hIndex) => (
                                 <Th
                                     p={"24px 0 20px 0"}
                                     {...column.getHeaderProps()}
                                     // isNumeric={column.isNumeric}
-                                    key={column.getHeaderProps().key}
+                                    key={hIndex}
                                 >
                                     {column.render("Header")}
                                 </Th>
@@ -365,7 +367,7 @@ const MyStakingDetailTable = () => {
                     {page.map((row, rIndex) => {
                         prepareRow(row);
                         return (
-                            <Tr {...row.getRowProps()} key={row.getRowProps().key}>
+                            <Tr {...row.getRowProps()} key={row.id}>
                                 {row.cells.map((cell) => (
                                     <Td
                                         p={0}
@@ -380,7 +382,7 @@ const MyStakingDetailTable = () => {
                                                 : "2px sold rgba(255, 255, 255, 1)"
                                         }
                                         {...cell.getCellProps()}
-                                        key={cell.getCellProps().key}
+                                        key={row.id}
                                     >
                                         {cell.render("Cell")}
                                     </Td>
