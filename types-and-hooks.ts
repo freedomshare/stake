@@ -656,7 +656,7 @@ export const useMetaQuery = <
     ) =>
     useQuery<MetaQuery, TError, TData>(
       variables === undefined ? ['meta'] : ['meta', variables],
-      fetcher<MetaQuery, MetaQueryVariables>(MetaDocument, variables),
+      fetcher<MetaQuery, MetaQueryVariables>(MetaDocument),
       options
     );
 export const StakePoolDocument = `

@@ -37,11 +37,12 @@ const StakingPoolList: {
         title: "Max APY",
         field: totalApy,
         unit: "",
+        info: "The calculation result after adding the maximum profit in the game.",
     },
     {
         img: "/images/occupationhuit_icon@2x.png",
         title: "Occupied Land Limit",
-        info: "",
+        info: "Game permission",
         field: "landC",
         unit: "LANDS",
     },
@@ -50,11 +51,12 @@ const StakingPoolList: {
         title: "Ditamin/Land/Day",
         field: "ditaminLD",
         unit: "DITAMIN",
+        info: "Game permission",
     },
     {
         img: "/images/ditminchallengehui_icon@2x.png",
         title: "Ditamin/Challenge",
-        info: "",
+        info: "Game permission",
         field: "ditaminC",
         unit: "DITAMIN",
     },
@@ -112,18 +114,20 @@ const StakingPoolLabel = () => {
                         </Text>
                         {item.info && (
                             <Tooltip
-                                label={
-                                    <Center
-                                        minWidth={"323px"}
-                                        minHeight={"72px"}
-                                    >
-                                        {item.info}
-                                    </Center>
-                                }
+                                shouldWrapChildren={true}
+                                sx={{
+                                    minWidth: "320px",
+                                    minHeight: "72px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                }}
+                                label={item.info}
                                 hasArrow
                                 bg={"#282c2b"}
                                 color={"white"}
                                 rounded={"10px"}
+                                textAlign={"center"}
                             >
                                 <Box
                                     as={"span"}
