@@ -144,7 +144,7 @@ export const Header = () => {
                         rounded={"full"}
                         width={"38px"}
                         height={"38px"}
-                        bg={"#011213"}
+                        // bg={"#011213"}
                     >
                         <Image
                             src={"/images/avatar@2x.png"}
