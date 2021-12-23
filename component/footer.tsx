@@ -57,7 +57,7 @@ export const Footer = () => {
                                 key={e.name}
                                 href={e.href}
                                 target="_blank"
-                                rel="noreferrer"
+                                rel="noopener noreferrer"
                                 color={"#9A9F9F"}
                                 fontFamily={"League Spartan"}
                                 fontSize={"13px"}
@@ -73,7 +73,7 @@ export const Footer = () => {
                         <Link
                             href={socialLinks.twitter}
                             target="_blank"
-                            rel="noreferrer"
+                            rel="noopener noreferrer"
                         >
                             <Image
                                 src={"/images/tweiti@2x.png"}
@@ -85,7 +85,7 @@ export const Footer = () => {
                         <Link
                             href={socialLinks.telegram}
                             target="_blank"
-                            rel="noreferrer"
+                            rel="noopener noreferrer"
                         >
                             <Image
                                 src={"/images/telegram@2x.png"}
@@ -97,7 +97,7 @@ export const Footer = () => {
                         <Link
                             href={socialLinks.discord}
                             target="_blank"
-                            rel="noreferrer"
+                            rel="noopener noreferrer"
                         >
                             <Image
                                 src={"/images/discord@2x.png"}

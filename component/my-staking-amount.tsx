@@ -322,7 +322,7 @@ const GetMeldRow = () => {
                 //@ts-ignore
                 href={meldUrl}
                 target={"_blank"}
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 variant={"outline"}
                 mScheme="white"
             >

@@ -265,6 +265,8 @@ const tHeadList: Column<TColumn>[] = [
                             //@ts-ignore
                             cell.row.original.txHash
                         }`}
+                        target={"_blank"}
+                        rel="noopener noreferrer"
                     >
                         <Image
                             src={"/images/zhuandao_icon@2x.png"}
