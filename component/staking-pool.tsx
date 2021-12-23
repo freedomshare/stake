@@ -36,7 +36,7 @@ const StakingPoolList: {
     {
         img: "/images/occupationhuit_icon@2x.png",
         title: "Occupied Land Limit",
-        info: "Occupied Land Limit",
+        info: "",
         field: "landC",
         unit: "LANDS",
     },
@@ -49,14 +49,14 @@ const StakingPoolList: {
     {
         img: "/images/ditminchallengehui_icon@2x.png",
         title: "Ditamin/Challenge",
-        info: "Ditamin/Challenge",
+        info: "",
         field: "ditaminC",
         unit: "DITAMIN",
     },
     {
         img: "/images/stakeamount_icon@2x.png",
         title: "Stake Amount",
-        info: "Stake Amoun",
+        info: "",
         field: numberOfMELD,
         unit: "MELD",
     },
