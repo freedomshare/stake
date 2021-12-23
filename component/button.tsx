@@ -65,6 +65,7 @@ export const MButton = (props: Props) => {
                 height: props.height || 30,
                 rounded: props.rounded || "8px",
                 fontSize: props.fontSize || "14px",
+                fontWeight: props.fontWeight || "bold",
             }}
         />
     );

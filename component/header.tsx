@@ -1,26 +1,21 @@
 import React, { useMemo } from "react";
 import Image from "next/image";
 import {
-    Avatar,
     Box,
     Center,
-    Circle,
-    Flex,
     HStack,
     Link,
     Text,
     useClipboard,
-    VStack,
 } from "@chakra-ui/react";
 import { MButton } from "./button";
 import { useStore } from "@nanostores/react";
 import { connectWallet, userAddressAtom } from "../store/address";
 import { useMeld } from "../store/stake";
 import { fromWei } from "web3-utils";
-import NumberFormat from "react-number-format";
 import { MNumberFormat } from "./number-format";
 
-const coinNum = "3k";
+// const coinNum = "3k";
 // const dCoinNum = "153k";
 
 export const Header = () => {
@@ -100,7 +95,7 @@ export const Header = () => {
                     fontWeight={"extrabold"}
                     fontSize={"13px"}
                     textTransform={"uppercase"}
-                    color="rgba(245, 197, 42, 1)"
+                    color="white"
                 >
                     marketplace
                 </Link>
@@ -115,6 +110,14 @@ export const Header = () => {
                 >
                     community
                 </Link>
+                <Link
+                    fontWeight={"extrabold"}
+                    fontSize={"13px"}
+                    textTransform={"uppercase"}
+                    color="rgba(245, 197, 42, 1)"
+                >
+                    STAKING
+                </Link>
             </HStack>
             {!isConnectWallet ? (
                 <MButton
@@ -126,6 +129,8 @@ export const Header = () => {
                     right={"73px"}
                     top={"11px"}
                     onClick={connectWallet}
+                    // fontWeight={"extrabold"}
+                    fontSize={"14px"}
                 >
                     Connect wallet
                 </MButton>
