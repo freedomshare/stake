@@ -45,13 +45,13 @@ const StakingPoolList: {
         title: "Occupied Land Limit",
         info: "Game permission",
         field: "landC",
-        unit: "LANDS",
+        unit: "Land",
     },
     {
         img: "/images/day_landhui_icon@2x.png",
         title: "Ditamin/Land/Day",
         field: "ditaminLD",
-        unit: "DITAMIN",
+        unit: "Ditamin",
         info: "Game permission",
     },
     {
@@ -59,21 +59,21 @@ const StakingPoolList: {
         title: "Ditamin/Challenge",
         info: "Game permission",
         field: "ditaminC",
-        unit: "DITAMIN",
+        unit: "Ditamin",
     },
     {
         img: "/images/stakeamount_icon@2x.png",
         title: "Stake Amount",
         info: "",
         field: numberOfMELD,
-        unit: "MELD",
+        unit: "Meld",
     },
     {
         img: "/images/stakeduration_icon@2x.png",
         title: "Stake Duration",
         info: "",
         field: "freezeTimeAtSeconds",
-        unit: "DAYS",
+        unit: "Day",
     },
 ];
 
