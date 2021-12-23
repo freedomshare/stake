@@ -6,20 +6,20 @@ import {
     Box,
     Flex,
     Grid,
-    VStack,
     Divider,
     HStack,
     Link,
 } from "@chakra-ui/react";
 import { colorSchemeList, MButton } from "./button";
-import { BoxInfo, UnitText } from "./info-box";
+import { UnitText } from "./info-box";
 import {
     isStakedAtom,
     useAllEarned,
-    useHarvest,
     useLevelInfoQuery,
     useTotalStakeMetaData,
     useStakes,
+    useHarvestAction,
+    useGetCurrentStakedPoolsQuery,
 } from "../store/stake";
 import { useStore } from "@nanostores/react";
 import { scrollToStakingPool } from "./staking-pool";
@@ -34,26 +34,33 @@ export const MyStakingAmountBox = () => {
     const isStaked = useStore(isStakedAtom);
 
     return (
-        <VStack
+        <Flex
+            flexDirection={"column"}
             as={Flex}
             width={"730px"}
             height={"394px"}
             // flexDirection={"column"}
-            padding={"32px 34px 26px 34px"}
+            padding={isStaked ? "32px 34px 26px 30px" : "28px 28px 28px 30px"}
             bg={"#0A4747"}
             rounded={"18px"}
-            spacing={"20px"}
             backgroundImage={"url(/images/amountbg@2x.png)"}
             backgroundRepeat={"no-repeat"}
             backgroundSize={"100%"}
             backgroundPosition={"bottom"}
         >
             <MyStakingAmount />
-            <Divider bg={"white"} opacity={0.1} mt={"16px!important"} />
+            <Divider
+                bg={"white"}
+                borderBottomWidth={"2px"}
+                opacity={0.1}
+                mb={isStaked ? "19px" : "14px"}
+                mt={isStaked ? "19px" : "16px"}
+            />
             {isStaked && <EarnedMELD />}
+            {/* <AccessLevel /> */}
             <FourBox />
             {isStaked ? <GetMeldRow /> : <StakeButtonGroup />}
-        </VStack>
+        </Flex>
     );
 };
 
@@ -67,9 +74,13 @@ const MyStakingAmount = () => {
     }, [data?.stakeMetaS]);
     return (
         <Center width={"100%"} justifyContent={"space-between"}>
-            <Center height={"46px"} flexDirection={"column"}>
+            <Center
+                height={"46px"}
+                flexDirection={"column"}
+                alignItems={"flex-start"}
+            >
                 <Text color="white" fontSize={"13px"} fontWeight={"bold"}>
-                    My staking amount
+                    My Staking Amount
                 </Text>
                 {isStaked && (
                     <Text color="white" fontSize={"22px"} fontWeight={"bold"}>
@@ -94,12 +105,12 @@ const MyStakingAmount = () => {
                     Add staking
                 </MButton>
             ) : (
-                <Text color={"white"} fontWeight={"fold"} fontSize={"26px"}>
+                <Text color={"white"} fontWeight={"bold"} fontSize={"26px"}>
                     0
                     <Text
                         as={"span"}
                         color={"#4A7A7A"}
-                        fontWeight={"fold"}
+                        fontWeight={"bold"}
                         fontSize={"12px"}
                     >
                         /MELD
@@ -111,8 +122,15 @@ const MyStakingAmount = () => {
 };
 
 const EarnedMELD = () => {
-    const { isLoading, mutate } = useHarvest();
-    const { data: earned } = useAllEarned();
+    const { isLoading, mutate } = useHarvestAction();
+    const { data } = useAllEarned();
+
+    const earned: string = useMemo(() => {
+        if (data !== undefined) {
+            return fromWei(data?.toString() || "");
+        }
+        return "";
+    }, [data]);
 
     return (
         <Center
@@ -120,6 +138,7 @@ const EarnedMELD = () => {
             width={"100%"}
             flex={1}
             justifyContent={"space-between"}
+            mb={"12px"}
         >
             <Flex align={"center"}>
                 <Image
@@ -129,15 +148,16 @@ const EarnedMELD = () => {
                     alt="meld earned"
                 />
                 <Box>
-                    <Text color="#537E7E" fontSize={"13px"} fontWeight={"bold"}>
+                    <Text
+                        color="#537E7E"
+                        fontSize={"13px"}
+                        fontWeight={"bold"}
+                        textTransform={"capitalize"}
+                    >
                         MELD earned
                     </Text>
                     <Text color="white" fontSize={"15px"} fontWeight={"bold"}>
-                        <MNumberFormat
-                            value={
-                                (earned && fromWei(earned?.toString())) || ""
-                            }
-                        />
+                        <MNumberFormat value={earned} />
                         MELD
                     </Text>
                 </Box>
@@ -146,11 +166,33 @@ const EarnedMELD = () => {
                 variant="outline"
                 mScheme="yellow"
                 isLoading={isLoading}
+                disabled={Number(earned) <= 0}
                 onClick={() => mutate()}
             >
                 Harvest
             </MButton>
         </Center>
+    );
+};
+const level = "free";
+const AccessLevel = () => {
+    return (
+        <HStack spacing={"4px"} mb={"14px"}>
+            <Image
+                src={`/images/${level}@2x.png`}
+                width={30}
+                height={30}
+                alt={`${level} access`}
+            />
+            <Text
+                color="white"
+                fontSize={"15px"}
+                fontWeight={"bold"}
+                textTransform={"capitalize"}
+            >
+                {level} access
+            </Text>
+        </HStack>
     );
 };
 
@@ -219,13 +261,16 @@ const InfoBox = ({ title, value, icon, unit }: Record<string, string>) => {
 
 const FourBox = React.memo(() => {
     const { data } = useLevelInfoQuery();
-    console.log("data", data);
+
     return (
         <Grid templateColumns={"repeat(4,1fr)"} gap={"10px"}>
             {userLevelInfo(
                 data?.stakePercent !== undefined
                     ? {
-                          apy: data?.stakePercent + "",
+                          apy:
+                              data?.stakePercent > 0
+                                  ? data?.stakePercent + "%"
+                                  : "--",
                           ol: data?.occupationLimit + "",
                           ddl: data?.ditaminDayLand?.toString(),
                           dc: data?.ditaminChallenge?.toString(),
@@ -259,6 +304,7 @@ const GetMeldRow = () => {
                     mr={"4px"}
                     fontSize={"12px"}
                     fontWeight={"bold"}
+                    textTransform={"capitalize"}
                 >
                     view more
                 </Text>

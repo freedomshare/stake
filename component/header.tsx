@@ -142,13 +142,19 @@ export const Header = () => {
                     right={"73px"}
                     top={0}
                 >
-                    {/* <Avatar width={"38px"} height={"38px"} bg={"#011213"}/> */}
                     <Box
                         rounded={"full"}
                         width={"38px"}
                         height={"38px"}
                         bg={"#011213"}
-                    />
+                    >
+                        <Image
+                            src={"/images/avatar@2x.png"}
+                            width={38}
+                            height={38}
+                            alt="avatar"
+                        />
+                    </Box>
                     <Text
                         color={"white"}
                         fontWeight={"bold"}

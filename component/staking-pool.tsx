@@ -7,16 +7,21 @@ import {
     Center,
     VStack,
     HStack,
+    useToast,
 } from "@chakra-ui/react";
 import { UnitText } from "./info-box";
 import { MButton } from "./button";
 import { StakePoolsQuery, useStakePoolsQuery } from "../types-and-hooks";
-import { useMutation } from "react-query";
-import { stakeByPoolId } from "../store/stake";
+import {
+    setCurrentPoolsId,
+    stakedArrAtom,
+    useStakePoolAction,
+} from "../store/stake";
 import { BigNumber } from "bignumber.js";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { MNumberFormat } from "./number-format";
 import { fromWei } from "web3-utils";
+import { useStore } from "@nanostores/react";
 
 const totalApy = "totalApy" as const;
 const numberOfMELD = "numberOfMELD" as const;
@@ -212,7 +217,43 @@ interface IAccessListProps {
 const AccessList = (p: IAccessListProps) => {
     const { title, field, data: originData = [], dataIndex } = p;
 
-    const { isLoading, mutate } = useMutation(stakeByPoolId);
+    const { isLoading, mutate, mutation, query } = useStakePoolAction();
+    const toast = useToast();
+
+    useEffect(() => {
+        const isSuccess = mutation.isSuccess && query.isSuccess;
+        const mutateBlockNumber = mutation?.data?.blockNumber;
+        const queryBlockNumber = query?.data?._meta?.block?.number;
+        if (
+            isSuccess &&
+            mutateBlockNumber &&
+            queryBlockNumber &&
+            mutateBlockNumber <= queryBlockNumber
+        ) {
+            toast({
+                status: "success",
+                position: "top",
+                title: `Successfully joined the ${field} access taking pool `,
+            });
+        }
+    }, [
+        field,
+        mutation?.data?.blockNumber,
+        mutation.isSuccess,
+        query?.data?._meta?.block?.number,
+        query.isSuccess,
+        toast,
+    ]);
+
+    useEffect(() => {
+        if (mutation.error) {
+            toast({
+                status: "error",
+                position: "top",
+                title: `the contract interaction is abnormal and he stake has failed , please try again later`,
+            });
+        }
+    }, [mutation.error, toast]);
 
     const isSoldOut = useMemo(
         () =>
@@ -237,6 +278,16 @@ const AccessList = (p: IAccessListProps) => {
             mutate(stakePoolId);
         }
     }, [data, dataIndex, mutate]);
+
+    const stakedArr = useStore(stakedArrAtom);
+
+    const isStakedPool = useMemo(() => {
+        const stakePoolId = data?.[dataIndex]?.id;
+        if (stakePoolId) {
+            return stakedArr.includes(stakePoolId);
+        }
+        return false;
+    }, [data, dataIndex, stakedArr]);
 
     return (
         <Flex
@@ -284,7 +335,7 @@ const AccessList = (p: IAccessListProps) => {
                     >
                         <Box>
                             <UnitText
-                                text={data?.[dataIndex]?.[item.field]}
+                                text={data?.[dataIndex]?.[item.field] ?? "--"}
                                 unit={item.unit}
                                 textSize={"16px"}
                                 unitTextSize={"12px"}
@@ -295,7 +346,10 @@ const AccessList = (p: IAccessListProps) => {
                             <>
                                 <UnitText
                                     text={
-                                        data?.[dataIndex]?.stakeApyPercent + "%"
+                                        data?.[dataIndex]?.stakeApyPercent
+                                            ? data?.[dataIndex]
+                                                  ?.stakeApyPercent + "%"
+                                            : "--"
                                     }
                                     unit={item.unit}
                                     textColor={"rgba(255, 255, 255, 0.5)"}
@@ -304,7 +358,10 @@ const AccessList = (p: IAccessListProps) => {
                                 />
                                 <UnitText
                                     text={
-                                        data?.[dataIndex]?.gameApyPercent + "%"
+                                        data?.[dataIndex]?.gameApyPercent
+                                            ? data?.[dataIndex]
+                                                  ?.gameApyPercent + "%"
+                                            : "--"
                                     }
                                     unit={item.unit}
                                     textColor={"rgba(255, 255, 255, 0.5)"}
@@ -322,7 +379,7 @@ const AccessList = (p: IAccessListProps) => {
                     mScheme={isSoldOut ? "white" : "yellow"}
                     onClick={stakeFn}
                     isLoading={isLoading}
-                    isDisabled={isSoldOut}
+                    isDisabled={isStakedPool || isSoldOut}
                 >
                     {isSoldOut ? "Sold Out" : "Stake"}
                 </MButton>
@@ -332,7 +389,16 @@ const AccessList = (p: IAccessListProps) => {
 };
 
 export const StakingPool = () => {
-    const { data } = useStakePoolsQuery({ first: 4, skip: 0 });
+    const { data } = useStakePoolsQuery({
+        first: 4,
+        skip: 0,
+    });
+
+    useEffect(() => {
+        if (data?.stakePools)
+            setCurrentPoolsId(data?.stakePools?.map((e) => e.id));
+    }, [data]);
+
     return (
         <Box className={StakingPoolClassName}>
             <Text

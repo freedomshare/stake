@@ -1,0 +1,7 @@
+query meta {
+    _meta {
+        block {
+            number
+        }
+    }
+}

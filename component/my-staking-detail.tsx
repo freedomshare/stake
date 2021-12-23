@@ -12,28 +12,23 @@ import {
     Button,
     Center,
     ButtonProps,
-    Square,
     HStack,
     TextProps,
 } from "@chakra-ui/react";
-import { Column, useTable, usePagination } from "react-table";
+import { Column, useTable, usePagination, useBlockLayout } from "react-table";
 import { MButton } from "./button";
 import React, {
-    useCallback,
     useEffect,
     useMemo,
-    useRef,
     useState,
 } from "react";
-import { StakesQuery, useStakesQuery } from "../types-and-hooks";
-import { time } from "console";
+import { StakesQuery } from "../types-and-hooks";
 import { useStore } from "@nanostores/react";
 import { userAddressAtom } from "../store/address";
 import { fromWei } from "web3-utils";
 import format from "date-fns/format";
 import { BigNumber } from "ethers";
 import { useStakes, useTotalStakeMetaData } from "../store/stake";
-import NumberFormat from "react-number-format";
 import { MNumberFormat } from "./number-format";
 import { networkName, PAGE_SIZE, txUrlMap } from "../store/constant";
 
@@ -65,7 +60,7 @@ export const MyStakingDetail = () => (
 
         <Box
             width={1200}
-            height={538}
+            height={"auto"}
             bg={"#0A4747"}
             rounded={"18px"}
             px={"22px"}
@@ -128,83 +123,101 @@ const tHeadList: Column<TColumn>[] = [
         width: 137,
         Header: "",
         Cell: () => (
-            <Box sx={{ pl: "34px" }}>
+            <Center height={"100%"}>
                 <Image
                     src={"/images/detaillogo@2x.png"}
                     width={67}
                     height={55}
                     alt="logo"
                 />
-            </Box>
+            </Center>
         ),
         accessor: "$icon",
     },
 
     {
-        width: 117 + 37,
-        Header: <THeadTitle pl={"28px"}>Status</THeadTitle>,
+        width: 104,
+        Header: <THeadTitle textAlign={"center"}>Status</THeadTitle>,
         accessor: "id",
         Cell: ({ cell }) => (
-            <Status
-                status={
-                    cell.row.original.claimed
-                        ? "claimed"
-                        : cell.row.original.expiredAt > Date.now() / 1000
-                        ? "staking"
-                        : "end"
-                }
-            />
+            <Center height={"100%"}>
+                <Status
+                    status={
+                        cell.row.original.claimed
+                            ? "claimed"
+                            : cell.row.original.expiredAt > Date.now() / 1000
+                            ? "staking"
+                            : "end"
+                    }
+                />
+            </Center>
         ),
     },
     {
-        width: 92 + 94,
-        Header: <THeadTitle>Staking amount</THeadTitle>,
+        width: 230,
+        Header: <THeadTitle pl={"50px"}>Staking amount</THeadTitle>,
         accessor: "stakePool",
         Cell: ({ cell }) => {
             return (
-                <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
-                    {fromWei(cell.row.original?.stakePool?.numberOfMELD || 0)}
-                    <Text as={"span"}>/MELD</Text>
-                </Text>
+                <HStack
+                    height={"100%"}
+                    color={"white"}
+                    fontSize={"13px"}
+                    fontWeight={"bold"}
+                    ml={"50px"}
+                >
+                    <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
+                        {fromWei(
+                            cell.row.original?.stakePool?.numberOfMELD || 0
+                        )}
+                        <Text as={"span"} color={"#4A7A7A"}>
+                            /MELD
+                        </Text>
+                    </Text>
+                </HStack>
             );
         },
     },
     {
         width: 74 + 67,
 
-        Header: <THeadTitle>Begin time</THeadTitle>,
+        Header: <THeadTitle pl={"6px"}>Begin time</THeadTitle>,
         accessor: "stakedAt",
         Cell: ({ cell }) => {
             return (
-                <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
-                    {format(
-                        new Date(cell.row.original?.stakedAt * 1000),
-                        "dd/MM/yyyy"
-                    )}
-                </Text>
+                <HStack height={"100%"}>
+                    <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
+                        {format(
+                            new Date(cell.row.original?.stakedAt * 1000),
+                            "dd/MM/yyyy"
+                        )}
+                    </Text>
+                </HStack>
             );
         },
     },
     {
-        width: 86 + 68,
+        width: 74 + 68,
 
-        Header: <THeadTitle>End time</THeadTitle>,
+        Header: <THeadTitle pl={"9px"}>End time</THeadTitle>,
         accessor: "expiredAt",
         Cell: ({ cell }) => {
             return (
-                <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
-                    {format(
-                        new Date(cell.row.original?.expiredAt * 1000),
-                        "dd/MM/yyyy"
-                    )}
-                </Text>
+                <HStack height={"100%"}>
+                    <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
+                        {format(
+                            new Date(cell.row.original?.expiredAt * 1000),
+                            "dd/MM/yyyy"
+                        )}
+                    </Text>
+                </HStack>
             );
         },
     },
     {
-        width: 74 + 56,
+        width: 86 + 78,
 
-        Header: <THeadTitle>Total revenue</THeadTitle>,
+        Header: <THeadTitle pl={"4px"}>Total revenue</THeadTitle>,
         accessor: "lastRecivedAt",
         Cell: ({ cell }) => {
             const {
@@ -218,74 +231,74 @@ const tHeadList: Column<TColumn>[] = [
                 },
             } = cell.row.original;
             return (
-                <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
-                    {/* {totalRevenue(
-                        stakedAt,
-                        expiredAt,
-                        numberOfMELD,
-                        stakeApyPercent,
-                        freezeTimeAtSeconds
-                    )} */}
-                    <MNumberFormat
-                        value={totalRevenue(
-                            stakedAt,
-                            expiredAt,
-                            numberOfMELD,
-                            stakeApyPercent
-                            // freezeTimeAtSeconds
-                        )}
-                    />
-                    <Text as={"span"}>/MELD</Text>
-                </Text>
+                <HStack height={"100%"}>
+                    <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
+                        <MNumberFormat
+                            value={totalRevenue(
+                                stakedAt,
+                                expiredAt,
+                                numberOfMELD,
+                                stakeApyPercent
+                            )}
+                        />
+                        <Text as={"span"} color={"#4A7A7A"}>
+                            /MELD
+                        </Text>
+                    </Text>
+                </HStack>
             );
         },
     },
     {
-        width: 98,
+        width: 64,
         Header: <THeadTitle>view TX</THeadTitle>,
         accessor: "$viewTx",
         Cell: ({ cell }) => {
             return (
-                <Box
-                    as="a"
-                    ml={"18px"}
-                    opacity={0.8}
-                    _hover={{ opacity: 1 }}
-                    href={`${txUrlMap[networkName!]}/${
-                        //@ts-ignore
-                        cell.row.original.txHash
-                    }`}
-                >
-                    <Image
-                        src={"/images/zhuandao_icon@2x.png"}
-                        width={21}
-                        height={21}
-                        alt="link"
-                    />
-                </Box>
+                <HStack height={"100%"}>
+                    <Box
+                        as="a"
+                        ml={"18px"}
+                        opacity={0.8}
+                        _hover={{ opacity: 1 }}
+                        href={`${txUrlMap[networkName!]}/${
+                            //@ts-ignore
+                            cell.row.original.txHash
+                        }`}
+                    >
+                        <Image
+                            src={"/images/zhuandao_icon@2x.png"}
+                            width={21}
+                            height={21}
+                            alt="link"
+                        />
+                    </Box>
+                </HStack>
             );
         },
     },
     {
+        width: 173,
         Header: (
-            <Box pl={"60px"}>
+            <Box pl={"72px"}>
                 <THeadTitle>Claim</THeadTitle>
             </Box>
         ),
         Cell: ({ cell }) => {
             return (
-                <MButton
-                    variant={"outline"}
-                    mScheme="yellow"
-                    disabled={
-                        cell.row.original.claimed ||
-                        cell.row.original.expiredAt < Date.now()
-                    }
-                    ml={"21px"}
-                    // onClick={() => {
-                >
-                    CLAIM
-                </MButton>
+                <HStack height={"100%"} pl={"33px"}>
+                    <MButton
+                        variant={"outline"}
+                        mScheme="yellow"
+                        disabled={
+                            cell.row.original.claimed ||
+                            cell.row.original.expiredAt < Date.now()
+                        }
+                        // onClick={() => {
+                    >
+                        CLAIM
+                    </MButton>
+                </HStack>
             );
         },
         accessor: "$claim",
@@ -326,15 +339,22 @@ const MyStakingDetailTable = () => {
             initialState: { pageSize: PAGE_SIZE },
             defaultColumn: {
                 Cell: ({ value }: { value: React.ReactNode }) => (
-                    <Text color={"white"} fontSize={"13px"} fontWeight={"bold"}>
-                        {value}
-                    </Text>
+                    <Center height={"100%"}>
+                        <Text
+                            color={"white"}
+                            fontSize={"13px"}
+                            fontWeight={"bold"}
+                        >
+                            {value}
+                        </Text>
+                    </Center>
                 ),
             },
             manualPagination: true,
             pageCount: Math.ceil(counts / PAGE_SIZE),
         },
-        usePagination
+        usePagination,
+        useBlockLayout
     );
     useEffect(() => {
         setPIndex(pageIndex);
@@ -348,14 +368,18 @@ const MyStakingDetailTable = () => {
         >
             <Table {...getTableProps()}>
                 <Thead>
-                    {headerGroups.map((headerGroup, i) => (
-                        <Tr {...headerGroup.getHeaderGroupProps()} key={i}>
-                            {headerGroup.headers.map((column, hIndex) => (
+                    {headerGroups.map((headerGroup) => (
+                        <Tr
+                            {...headerGroup.getHeaderGroupProps()}
+                            key={headerGroup.getHeaderGroupProps().key}
+                        >
+                            {headerGroup.headers.map((column) => (
                                 <Th
                                     p={"24px 0 20px 0"}
+                                    border={"none"}
                                     {...column.getHeaderProps()}
                                     // isNumeric={column.isNumeric}
-                                    key={hIndex}
+                                    key={column.getHeaderProps().key}
                                 >
                                     {column.render("Header")}
                                 </Th>
@@ -367,8 +391,11 @@ const MyStakingDetailTable = () => {
                     {page.map((row, rIndex) => {
                         prepareRow(row);
                         return (
-                            <Tr {...row.getRowProps()} key={row.id}>
-                                {row.cells.map((cell) => (
+                            <Tr
+                                {...row.getRowProps()}
+                                key={row.getRowProps().key}
+                            >
+                                {row.cells.map((cell, index) => (
                                     <Td
                                         p={0}
                                         borderColor={"rgba(255, 255, 255, .1)"}
@@ -376,10 +403,9 @@ const MyStakingDetailTable = () => {
                                         height={"84px"}
                                         borderLeft={"none"}
                                         borderRight={"none"}
-                                        borderBottom={
-                                            rIndex === page.length - 1
-                                                ? "none"
-                                                : "2px sold rgba(255, 255, 255, 1)"
+                                        borderBottom={"none"}
+                                        borderTop={
+                                            "2px sold rgba(255, 255, 255, 1)"
                                         }
                                         {...cell.getCellProps()}
                                         key={row.id}

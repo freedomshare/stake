@@ -575,6 +575,11 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny'
 }
 
+export type MetaQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MetaQuery = { __typename?: 'Query', _meta?: { __typename?: '_Meta_', block: { __typename?: '_Block_', number: number } } | null | undefined };
+
 export type StakePoolQueryVariables = Exact<{
   id: Scalars['ID'];
   block?: InputMaybe<Block_Height>;
@@ -633,6 +638,27 @@ export type StakesQueryVariables = Exact<{
 export type StakesQuery = { __typename?: 'Query', stakes: Array<{ __typename?: 'Stake', id: string, staker: string, claimed: boolean, stakedAt: any, lastRecivedAt: any, expiredAt: any, stakePool: { __typename?: 'StakePool', id: string, ditaminLD: any, ditaminC: any, numberOfMELD: any, landC: any, vipname: string, stakeApyPercent: any, gameApyPercent: any, freezeTimeAtSeconds: any, totalVolume: any, salesCount: any } }> };
 
 
+export const MetaDocument = `
+    query meta {
+  _meta {
+    block {
+      number
+    }
+  }
+}
+    `;
+export const useMetaQuery = <
+      TData = MetaQuery,
+      TError = unknown
+    >(
+      variables?: MetaQueryVariables,
+      options?: UseQueryOptions<MetaQuery, TError, TData>
+    ) =>
+    useQuery<MetaQuery, TError, TData>(
+      variables === undefined ? ['meta'] : ['meta', variables],
+      fetcher<MetaQuery, MetaQueryVariables>(MetaDocument, variables),
+      options
+    );
 export const StakePoolDocument = `
     query stakePool($id: ID!, $block: Block_height, $subgraphError: _SubgraphErrorPolicy_! = deny) {
   stakePool(id: $id, block: $block, subgraphError: $subgraphError) {
