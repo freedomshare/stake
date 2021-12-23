@@ -40,8 +40,8 @@ export const Header = () => {
                 top={"5px"}
                 left={"74px"}
                 sx={{
-                    "@media screen and (max-width: 1500)": {
-                        left: "0px",
+                    "@media (max-width: 1500px)": {
+                        left: "0",
                     },
                 }}
             >

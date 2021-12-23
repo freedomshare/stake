@@ -51,14 +51,15 @@ type Props = ButtonProps & {
 };
 
 export const MButton = (props: Props) => {
+    const { mScheme, ...rest } = props;
     return (
         <Button
-            {...props}
+            {...rest}
             {...{
-                ...(props.mScheme &&
+                ...(mScheme &&
                 props.variant === "outline" &&
-                colorSchemeList[props.mScheme]
-                    ? colorSchemeList[props.mScheme]
+                colorSchemeList[mScheme]
+                    ? colorSchemeList[mScheme]
                     : {}),
                 width: props.width || 124,
                 height: props.height || 30,

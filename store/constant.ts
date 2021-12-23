@@ -34,3 +34,5 @@ export const socialLinks = {
     telegram: "https://t.me/melandaiWorld",
     discord: "https://discord.gg/Jgnx2Wy9GN",
 };
+
+export const END_POINT = `https://graphql-graph-node-${networkName}.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake`;

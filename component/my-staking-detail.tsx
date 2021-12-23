@@ -346,14 +346,14 @@ const MyStakingDetailTable = () => {
         >
             <Table {...getTableProps()}>
                 <Thead>
-                    {headerGroups.map((headerGroup, i) => (
-                        <Tr {...headerGroup.getHeaderGroupProps()} key={i}>
-                            {headerGroup.headers.map((column, hIndex) => (
+                    {headerGroups.map((headerGroup) => (
+                        <Tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.getHeaderGroupProps().key}>
+                            {headerGroup.headers.map((column) => (
                                 <Th
                                     p={"24px 0 20px 0"}
                                     {...column.getHeaderProps()}
                                     // isNumeric={column.isNumeric}
-                                    key={hIndex}
+                                    key={column.getHeaderProps().key}
                                 >
                                     {column.render("Header")}
                                 </Th>
@@ -365,7 +365,7 @@ const MyStakingDetailTable = () => {
                     {page.map((row, rIndex) => {
                         prepareRow(row);
                         return (
-                            <Tr {...row.getRowProps()} key={row.id}>
+                            <Tr {...row.getRowProps()} key={row.getRowProps().key}>
                                 {row.cells.map((cell) => (
                                     <Td
                                         p={0}
@@ -380,7 +380,7 @@ const MyStakingDetailTable = () => {
                                                 : "2px sold rgba(255, 255, 255, 1)"
                                         }
                                         {...cell.getCellProps()}
-                                        key={row.id}
+                                        key={cell.getCellProps().key}
                                     >
                                         {cell.render("Cell")}
                                     </Td>

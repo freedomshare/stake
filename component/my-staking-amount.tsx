@@ -191,7 +191,7 @@ const InfoBox = ({ title, value, icon, unit }: Record<string, string>) => {
             flexDirection={"column"}
             width={"160px"}
             height={"100px"}
-            bg={"#154F4F"}
+            bg={"rgba(21, 79, 79, .85)"}
             rounded={"10px"}
             pl={"18px"}
             pt={"15px"}

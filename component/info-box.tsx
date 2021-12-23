@@ -11,6 +11,7 @@ import {
     ColorProps,
 } from "@chakra-ui/react";
 import Image from "next/image";
+import { useMemo } from "react";
 
 
 interface IBoxInfoProps extends FlexProps {
@@ -115,15 +116,19 @@ interface IUnitTextProps {
 }
 export const UnitText = (p: IUnitTextProps) => {
     const { text = "", unit, textSize, unitTextSize, textColor } = p;
+    const isEmpty = useMemo(() => {
+        const value = (text + "").trim();
+        return value === "0" || value === "0%";
+    }, [text]);
     return (
         <Text
             textColor={textColor || "white"}
             fontSize={textSize}
             fontWeight={"bold"}
         >
-            {text}
+            {isEmpty ? "--" : text}
             <Text
-                hidden={!unit}
+                hidden={isEmpty || !unit}
                 as="span"
                 fontSize={unitTextSize}
                 fontWeight={"bold"}

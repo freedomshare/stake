@@ -353,14 +353,14 @@ const AccessList = (p: IAccessListProps) => {
                     </VStack>
                 </Center>
             ))}
-            <Center height={"84px"}>
+            <Center hidden={field === 'free'} height={"84px"}>
                 <MButton
-                    {...colorSchemeList.yellow._hover}
-                    _hover={colorSchemeList.yellow._hover}
+                    variant={"outline"}
                     mScheme={isSoldOut ? "white" : "yellow"}
                     onClick={stakeFn}
                     isLoading={isLoading}
                     isDisabled={isSoldOut}
+
                 >
                     {isSoldOut ? "Sold Out" : "Stake"}
                 </MButton>

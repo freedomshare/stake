@@ -22,8 +22,9 @@ export const NotConnectWalletBox = (props: {
                 <Center
                     width={"100%"}
                     justifyContent={"flex-start"}
-                    bg={"rgba(211, 27, 88, 1)"}
-                    rounded={"18px"}
+                    backgroundImage={`url(/images/413@2x.png)`}
+                    backgroundRepeat={`no-repeat`}
+                    backgroundSize={"100%"}
                     height={"71px"}
                 >
                     <Box mx={"10px"}>
@@ -45,6 +46,8 @@ export const NotConnectWalletBox = (props: {
                     onClick={props.onClickConnect}
                     mScheme={"yellow"}
                     fontSize={"14px"}
+                    height={"38px"}
+                    width={"151px"}
                 >
                     Connect wallet
                 </MButton>
