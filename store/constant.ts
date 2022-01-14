@@ -42,4 +42,4 @@ export const socialLinks = {
     discord: "https://discord.gg/Jgnx2Wy9GN",
 };
 
-export const END_POINT = `https://graphql-graph-node-${networkName}.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake`;
+export const END_POINT = networkName == 'bsc' ? 'https://api.thegraph.com/subgraphs/name/hongjianghuang/melandstake' : `https://graphql-graph-node-${networkName}.melandworld.com/subgraphs/name/HongjiangHuang/MelandStake`;
